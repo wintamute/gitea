@@ -97,6 +97,12 @@ func (wc wechatworkConvertor) Push(p *api.PushPayload) (WechatworkPayload, error
 	return newWechatworkMarkdownPayload(title + "\r\n\r\n" + text), nil
 }
 
+// AdminUser composes WeChat Work payload for admin user lifecycle events
+func (wc wechatworkConvertor) AdminUser(p *api.AdminUserPayload) (WechatworkPayload, error) {
+	text, _ := getAdminUserPayloadInfo(p, noneLinkFormatter, true)
+	return newWechatworkMarkdownPayload(text), nil
+}
+
 // Issue implements PayloadConvertor Issue method
 func (wc wechatworkConvertor) Issue(p *api.IssuePayload) (WechatworkPayload, error) {
 	text, issueTitle, extraMarkdown, _ := getIssuesPayloadInfo(p, noneLinkFormatter, true)

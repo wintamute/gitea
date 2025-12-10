@@ -23,6 +23,7 @@ import (
 	api "code.gitea.io/gitea/modules/structs"
 	"code.gitea.io/gitea/modules/timeutil"
 	"code.gitea.io/gitea/modules/web"
+	webhook_module "code.gitea.io/gitea/modules/webhook"
 	"code.gitea.io/gitea/routers/api/v1/user"
 	"code.gitea.io/gitea/routers/api/v1/utils"
 	asymkey_service "code.gitea.io/gitea/services/asymkey"
@@ -30,6 +31,7 @@ import (
 	"code.gitea.io/gitea/services/convert"
 	"code.gitea.io/gitea/services/mailer"
 	user_service "code.gitea.io/gitea/services/user"
+	webhook_service "code.gitea.io/gitea/services/webhook"
 )
 
 func parseAuthSource(ctx *context.APIContext, u *user_model.User, sourceID int64) {
@@ -156,6 +158,13 @@ func CreateUser(ctx *context.APIContext) {
 
 	log.Trace("Account created by admin (%s): %s", ctx.Doer.Name, u.Name)
 
+	// Emit system webhook: admin user created (best-effort)
+	_ = webhook_service.PrepareWebhooks(ctx, webhook_service.EventSource{}, webhook_module.HookEventAdminUserCreate, &api.AdminUserPayload{
+		Action: "created",
+		User:   convert.ToUser(ctx, u, ctx.Doer),
+		Actor:  convert.ToUser(ctx, ctx.Doer, ctx.Doer),
+	})
+
 	// Send email notification.
 	if form.SendNotify {
 		mailer.SendRegisterNotifyMail(u)
@@ -193,6 +202,13 @@ func EditUser(ctx *context.APIContext) {
 	//     "$ref": "#/responses/validationError"
 
 	form := web.GetForm(ctx).(*api.EditUserOption)
+
+	// detect if this edit will suspend the user (ProhibitLogin from false -> true)
+	wasProhibitLogin := ctx.ContextUser.ProhibitLogin
+	willSuspend := false
+	if form.ProhibitLogin != nil && *form.ProhibitLogin && !wasProhibitLogin {
+		willSuspend = true
+	}
 
 	authOpts := &user_service.UpdateAuthOptions{
 		LoginSource:        optional.FromNonDefault(form.SourceID),
@@ -258,6 +274,22 @@ func EditUser(ctx *context.APIContext) {
 
 	log.Trace("Account profile updated by admin (%s): %s", ctx.Doer.Name, ctx.ContextUser.Name)
 
+	// Emit system webhook: admin user updated (best-effort)
+	_ = webhook_service.PrepareWebhooks(ctx, webhook_service.EventSource{}, webhook_module.HookEventAdminUserUpdate, &api.AdminUserPayload{
+		Action: "updated",
+		User:   convert.ToUser(ctx, ctx.ContextUser, ctx.Doer),
+		Actor:  convert.ToUser(ctx, ctx.Doer, ctx.Doer),
+	})
+
+	// Emit system webhook: admin user suspended if applicable
+	if willSuspend {
+		_ = webhook_service.PrepareWebhooks(ctx, webhook_service.EventSource{}, webhook_module.HookEventAdminUserSuspend, &api.AdminUserPayload{
+			Action: "suspended",
+			User:   convert.ToUser(ctx, ctx.ContextUser, ctx.Doer),
+			Actor:  convert.ToUser(ctx, ctx.Doer, ctx.Doer),
+		})
+	}
+
 	ctx.JSON(http.StatusOK, convert.ToUser(ctx, ctx.ContextUser, ctx.Doer))
 }
 
@@ -299,6 +331,9 @@ func DeleteUser(ctx *context.APIContext) {
 		return
 	}
 
+	// Prepare payload before deletion
+	subject := convert.ToUser(ctx, ctx.ContextUser, ctx.Doer)
+
 	if err := user_service.DeleteUser(ctx, ctx.ContextUser, ctx.FormBool("purge")); err != nil {
 		if repo_model.IsErrUserOwnRepos(err) ||
 			org_model.IsErrUserHasOrgs(err) ||
@@ -311,6 +346,13 @@ func DeleteUser(ctx *context.APIContext) {
 		return
 	}
 	log.Trace("Account deleted by admin(%s): %s", ctx.Doer.Name, ctx.ContextUser.Name)
+
+	// Emit system webhook: admin user deleted (best-effort)
+	_ = webhook_service.PrepareWebhooks(ctx, webhook_service.EventSource{}, webhook_module.HookEventAdminUserDelete, &api.AdminUserPayload{
+		Action: "deleted",
+		User:   subject,
+		Actor:  convert.ToUser(ctx, ctx.Doer, ctx.Doer),
+	})
 
 	ctx.Status(http.StatusNoContent)
 }

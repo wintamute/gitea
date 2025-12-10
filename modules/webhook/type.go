@@ -34,6 +34,14 @@ const (
 	HookEventStatus                    HookEventType = "status"
 	// once a new event added here, please also added to AllEvents() function
 
+	// Admin-scoped events (system webhooks)
+	// Emitted for administrative actions such as user lifecycle changes
+	HookEventAdminUser        HookEventType = "admin_user"
+	HookEventAdminUserCreate  HookEventType = "admin_user_create"
+	HookEventAdminUserDelete  HookEventType = "admin_user_delete"
+	HookEventAdminUserUpdate  HookEventType = "admin_user_update"
+	HookEventAdminUserSuspend HookEventType = "admin_user_suspend"
+
 	// FIXME: This event should be a group of pull_request_review_xxx events
 	HookEventPullRequestReview HookEventType = "pull_request_review"
 	// Actions event only
@@ -68,6 +76,12 @@ func AllEvents() []HookEventType {
 		HookEventRelease,
 		HookEventPackage,
 		HookEventStatus,
+		// admin/system
+		HookEventAdminUser,
+		HookEventAdminUserCreate,
+		HookEventAdminUserDelete,
+		HookEventAdminUserUpdate,
+		HookEventAdminUserSuspend,
 		HookEventWorkflowRun,
 		HookEventWorkflowJob,
 	}
@@ -89,6 +103,8 @@ func (h HookEventType) Event() string {
 		return "pull_request_rejected"
 	case HookEventPullRequestReviewComment:
 		return "pull_request_comment"
+	case HookEventAdminUser, HookEventAdminUserCreate, HookEventAdminUserDelete, HookEventAdminUserUpdate, HookEventAdminUserSuspend:
+		return "admin_user"
 	default:
 		return string(h)
 	}

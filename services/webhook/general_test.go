@@ -112,6 +112,28 @@ func pushTestPayloadWithCommitMessage(message string) *api.PushPayload {
 	}
 }
 
+func TestGetAdminUserPayloadInfo(t *testing.T) {
+	cases := []struct {
+		action string
+		color  int
+	}{
+		{"created", greenColor},
+		{"updated", greyColor},
+		{"deleted", redColor},
+		{"suspended", yellowColor},
+	}
+	for _, c := range cases {
+		p := &api.AdminUserPayload{
+			Action: c.action,
+			User:   &api.User{UserName: "bob"},
+			Actor:  &api.User{UserName: "alice"},
+		}
+		text, color := getAdminUserPayloadInfo(p, noneLinkFormatter, true)
+		assert.NotEmpty(t, text)
+		assert.Equal(t, c.color, color)
+	}
+}
+
 func issueTestPayload() *api.IssuePayload {
 	return &api.IssuePayload{
 		Index: 2,

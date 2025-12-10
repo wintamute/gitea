@@ -150,6 +150,7 @@ var (
 	_ Payloader = &RepositoryPayload{}
 	_ Payloader = &ReleasePayload{}
 	_ Payloader = &PackagePayload{}
+	_ Payloader = &AdminUserPayload{}
 )
 
 // CreatePayload represents a payload information of create event.
@@ -189,6 +190,21 @@ func ParseCreateHook(raw []byte) (*CreatePayload, error) {
 		return nil, ErrInvalidReceiveHook
 	}
 	return hook, nil
+}
+
+// AdminUserPayload represents a payload for admin user lifecycle events
+type AdminUserPayload struct {
+	// One of: created, deleted, updated, suspended, unsuspended
+	Action string `json:"action"`
+	// The subject user the action was performed on
+	User *User `json:"user"`
+	// The admin (actor) who performed the action, if available
+	Actor *User `json:"actor,omitempty"`
+}
+
+// JSONPayload returns JSON representation of the admin user payload
+func (p *AdminUserPayload) JSONPayload() ([]byte, error) {
+	return json.MarshalIndent(p, "", "  ")
 }
 
 // PusherType define the type to push

@@ -31,6 +31,7 @@ type payloadConvertor[T any] interface {
 	Status(*api.CommitStatusPayload) (T, error)
 	WorkflowRun(*api.WorkflowRunPayload) (T, error)
 	WorkflowJob(*api.WorkflowJobPayload) (T, error)
+	AdminUser(*api.AdminUserPayload) (T, error)
 }
 
 func convertUnmarshalledJSON[T, P any](convert func(P) (T, error), data []byte) (t T, err error) {
@@ -86,6 +87,9 @@ func newPayload[T any](rc payloadConvertor[T], data []byte, event webhook_module
 		return convertUnmarshalledJSON(rc.WorkflowRun, data)
 	case webhook_module.HookEventWorkflowJob:
 		return convertUnmarshalledJSON(rc.WorkflowJob, data)
+	case webhook_module.HookEventAdminUser, webhook_module.HookEventAdminUserCreate,
+		webhook_module.HookEventAdminUserDelete, webhook_module.HookEventAdminUserUpdate, webhook_module.HookEventAdminUserSuspend:
+		return convertUnmarshalledJSON(rc.AdminUser, data)
 	}
 	return t, fmt.Errorf("newPayload unsupported event: %s", event)
 }

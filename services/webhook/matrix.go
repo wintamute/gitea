@@ -115,6 +115,12 @@ func (m matrixConvertor) Create(p *api.CreatePayload) (MatrixPayload, error) {
 	return m.newPayload(text)
 }
 
+// AdminUser implements payloadConvertor AdminUser method
+func (m matrixConvertor) AdminUser(p *api.AdminUserPayload) (MatrixPayload, error) {
+	text, _ := getAdminUserPayloadInfo(p, htmlLinkFormatter, true)
+	return m.newPayload(text)
+}
+
 // Delete composes Matrix payload for delete a branch or tag.
 func (m matrixConvertor) Delete(p *api.DeletePayload) (MatrixPayload, error) {
 	refName := git.RefName(p.Ref).ShortName()

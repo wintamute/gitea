@@ -122,6 +122,12 @@ func (pc packagistConvertor) WorkflowJob(_ *api.WorkflowJobPayload) (PackagistPa
 	return PackagistPayload{}, nil
 }
 
+// AdminUser implements PayloadConvertor AdminUser method
+// Packagist does not consume admin user events, return empty payload
+func (pc packagistConvertor) AdminUser(_ *api.AdminUserPayload) (PackagistPayload, error) {
+	return PackagistPayload{}, nil
+}
+
 func newPackagistRequest(_ context.Context, w *webhook_model.Webhook, t *webhook_model.HookTask) (*http.Request, []byte, error) {
 	meta := &PackagistMeta{}
 	if err := json.Unmarshal([]byte(w.Meta), meta); err != nil {

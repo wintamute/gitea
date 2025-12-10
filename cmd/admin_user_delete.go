@@ -12,7 +12,11 @@ import (
 	user_model "code.gitea.io/gitea/models/user"
 	"code.gitea.io/gitea/modules/setting"
 	"code.gitea.io/gitea/modules/storage"
+	api "code.gitea.io/gitea/modules/structs"
+	webhook_module "code.gitea.io/gitea/modules/webhook"
+	"code.gitea.io/gitea/services/convert"
 	user_service "code.gitea.io/gitea/services/user"
+	webhook_service "code.gitea.io/gitea/services/webhook"
 
 	"github.com/urfave/cli/v3"
 )
@@ -80,5 +84,19 @@ func runDeleteUser(ctx context.Context, c *cli.Command) error {
 		return fmt.Errorf("the user %s does not match the provided id %d", user.Name, c.Int64("id"))
 	}
 
-	return user_service.DeleteUser(ctx, user, c.Bool("purge"))
+	// Prepare payload before deletion
+	subject := convert.ToUser(ctx, user, nil)
+
+	if err := user_service.DeleteUser(ctx, user, c.Bool("purge")); err != nil {
+		return err
+	}
+
+	// Emit system webhook: admin user deleted (CLI)
+	_ = webhook_service.PrepareWebhooks(ctx, webhook_service.EventSource{}, webhook_module.HookEventAdminUserDelete, &api.AdminUserPayload{
+		Action: "deleted",
+		User:   subject,
+		// no authenticated actor in CLI context
+	})
+
+	return nil
 }

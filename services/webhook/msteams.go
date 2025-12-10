@@ -13,6 +13,7 @@ import (
 
 	webhook_model "code.gitea.io/gitea/models/webhook"
 	"code.gitea.io/gitea/modules/git"
+	"code.gitea.io/gitea/modules/setting"
 	api "code.gitea.io/gitea/modules/structs"
 	"code.gitea.io/gitea/modules/util"
 	webhook_module "code.gitea.io/gitea/modules/webhook"
@@ -343,6 +344,25 @@ func (msteamsConvertor) WorkflowJob(p *api.WorkflowJobPayload) (MSTeamsPayload, 
 		p.WorkflowJob.HTMLURL,
 		color,
 		&MSTeamsFact{"WorkflowJob:", p.WorkflowJob.Name},
+	), nil
+}
+
+// AdminUser composes MS Teams payload for admin user lifecycle events
+func (m msteamsConvertor) AdminUser(p *api.AdminUserPayload) (MSTeamsPayload, error) {
+	text, color := getAdminUserPayloadInfo(p, noneLinkFormatter, true)
+	// Use actor as the section user if available
+	actor := &api.User{}
+	if p.Actor != nil {
+		actor = p.Actor
+	}
+	return createMSTeamsPayload(
+		nil, // no repository context for admin events
+		actor,
+		"Admin: User",
+		text,
+		setting.AppURL,
+		color,
+		nil,
 	), nil
 }
 

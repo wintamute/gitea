@@ -389,6 +389,62 @@ func getWorkflowJobPayloadInfo(p *api.WorkflowJobPayload, linkFormatter linkForm
 	return text, color
 }
 
+// getAdminUserPayloadInfo formats provider-agnostic text for admin user lifecycle events
+// Actions: created, updated, deleted, suspended
+func getAdminUserPayloadInfo(p *api.AdminUserPayload, linkFormatter linkFormatter, withSender bool) (text string, color int) {
+	// Build user link
+	userName := ""
+	if p.User != nil {
+		userName = p.User.UserName
+	}
+	userLink := userName
+	if userName != "" {
+		userLink = linkFormatter(setting.AppURL+url.PathEscape(userName), "@"+userName)
+	}
+
+	// Build actor segment
+	if withSender && p.Actor != nil && p.Actor.UserName != "" {
+		actorLink := linkFormatter(setting.AppURL+url.PathEscape(p.Actor.UserName), p.Actor.UserName)
+		switch p.Action {
+		case "created":
+			text = fmt.Sprintf("User created: %s by %s", userLink, actorLink)
+			color = greenColor
+		case "updated":
+			text = fmt.Sprintf("User updated: %s by %s", userLink, actorLink)
+			color = greyColor
+		case "deleted":
+			text = fmt.Sprintf("User deleted: %s by %s", userLink, actorLink)
+			color = redColor
+		case "suspended":
+			text = fmt.Sprintf("User suspended: %s by %s", userLink, actorLink)
+			color = yellowColor
+		default:
+			text = fmt.Sprintf("User event (%s): %s by %s", p.Action, userLink, actorLink)
+			color = greyColor
+		}
+	} else {
+		// no actor shown
+		switch p.Action {
+		case "created":
+			text = fmt.Sprintf("User created: %s", userLink)
+			color = greenColor
+		case "updated":
+			text = fmt.Sprintf("User updated: %s", userLink)
+			color = greyColor
+		case "deleted":
+			text = fmt.Sprintf("User deleted: %s", userLink)
+			color = redColor
+		case "suspended":
+			text = fmt.Sprintf("User suspended: %s", userLink)
+			color = yellowColor
+		default:
+			text = fmt.Sprintf("User event (%s): %s", p.Action, userLink)
+			color = greyColor
+		}
+	}
+	return text, color
+}
+
 // ToHook convert models.Webhook to api.Hook
 // This function is not part of the convert package to prevent an import cycle
 func ToHook(repoLink string, w *webhook_model.Webhook) (*api.Hook, error) {

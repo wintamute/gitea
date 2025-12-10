@@ -104,6 +104,12 @@ func (t telegramConvertor) Push(p *api.PushPayload) (TelegramPayload, error) {
 	return createTelegramPayloadHTML(title + htmlCommits), nil
 }
 
+// AdminUser composes Telegram payload for admin user lifecycle events
+func (t telegramConvertor) AdminUser(p *api.AdminUserPayload) (TelegramPayload, error) {
+	text, _ := getAdminUserPayloadInfo(p, htmlLinkFormatter, true)
+	return createTelegramPayloadHTML(text), nil
+}
+
 // Issue implements PayloadConvertor Issue method
 func (t telegramConvertor) Issue(p *api.IssuePayload) (TelegramPayload, error) {
 	text, _, extraMarkdown, _ := getIssuesPayloadInfo(p, htmlLinkFormatter, true)

@@ -12,6 +12,7 @@ import (
 
 	webhook_model "code.gitea.io/gitea/models/webhook"
 	"code.gitea.io/gitea/modules/git"
+	"code.gitea.io/gitea/modules/setting"
 	api "code.gitea.io/gitea/modules/structs"
 	"code.gitea.io/gitea/modules/util"
 	webhook_module "code.gitea.io/gitea/modules/webhook"
@@ -186,6 +187,12 @@ func (dingtalkConvertor) WorkflowJob(p *api.WorkflowJobPayload) (DingtalkPayload
 	text, _ := getWorkflowJobPayloadInfo(p, noneLinkFormatter, true)
 
 	return createDingtalkPayload(text, text, "Workflow Job", p.WorkflowJob.HTMLURL), nil
+}
+
+// AdminUser composes DingTalk payload for admin user lifecycle events
+func (dc dingtalkConvertor) AdminUser(p *api.AdminUserPayload) (DingtalkPayload, error) {
+	text, _ := getAdminUserPayloadInfo(p, noneLinkFormatter, true)
+	return createDingtalkPayload("Admin: User", text, "view", setting.AppURL), nil
 }
 
 func createDingtalkPayload(title, text, singleTitle, singleURL string) DingtalkPayload {

@@ -226,6 +226,21 @@ func (s slackConvertor) Push(p *api.PushPayload) (SlackPayload, error) {
 	}}), nil
 }
 
+// AdminUser composes Slack payload for admin user lifecycle events
+func (s slackConvertor) AdminUser(p *api.AdminUserPayload) (SlackPayload, error) {
+	text, color := getAdminUserPayloadInfo(p, SlackLinkFormatter, true)
+	// Provide a short fallback title without links
+	fallback := SlackShortTextFormatter(text)
+	attachments := []SlackAttachment{{
+		Fallback:  fallback,
+		Color:     fmt.Sprintf("#%06x", color),
+		Title:     "Admin: User",
+		TitleLink: setting.AppURL,
+		Text:      text,
+	}}
+	return s.createPayload(text, attachments), nil
+}
+
 // PullRequest implements payloadConvertor PullRequest method
 func (s slackConvertor) PullRequest(p *api.PullRequestPayload) (SlackPayload, error) {
 	text, issueTitle, extraMarkdown, color := getPullRequestPayloadInfo(p, SlackLinkFormatter, true)

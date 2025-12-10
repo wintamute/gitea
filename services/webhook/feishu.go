@@ -94,6 +94,12 @@ func (fc feishuConvertor) Push(p *api.PushPayload) (FeishuPayload, error) {
 	return newFeishuTextPayload(text), nil
 }
 
+// AdminUser composes Feishu payload for admin user lifecycle events
+func (fc feishuConvertor) AdminUser(p *api.AdminUserPayload) (FeishuPayload, error) {
+	text, _ := getAdminUserPayloadInfo(p, noneLinkFormatter, true)
+	return newFeishuTextPayload(text), nil
+}
+
 // Issue implements PayloadConvertor Issue method
 func (fc feishuConvertor) Issue(p *api.IssuePayload) (FeishuPayload, error) {
 	title, link, by, operator, result, assignees := getIssuesInfo(p)

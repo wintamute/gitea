@@ -15,6 +15,10 @@ import (
 	pwd "code.gitea.io/gitea/modules/auth/password"
 	"code.gitea.io/gitea/modules/optional"
 	"code.gitea.io/gitea/modules/setting"
+	api "code.gitea.io/gitea/modules/structs"
+	webhook_module "code.gitea.io/gitea/modules/webhook"
+	"code.gitea.io/gitea/services/convert"
+	webhook_service "code.gitea.io/gitea/services/webhook"
 
 	"github.com/urfave/cli/v3"
 )
@@ -228,6 +232,13 @@ func runCreateUser(ctx context.Context, c *cli.Command) error {
 		return fmt.Errorf("CreateUser: %w", err)
 	}
 	fmt.Printf("New user '%s' has been successfully created!\n", username)
+
+	// Emit system webhook: admin user created (CLI)
+	_ = webhook_service.PrepareWebhooks(ctx, webhook_service.EventSource{}, webhook_module.HookEventAdminUserCreate, &api.AdminUserPayload{
+		Action: "created",
+		User:   convert.ToUser(ctx, u, nil),
+		// No authenticated actor context for CLI; omit Actor
+	})
 
 	// create the access token
 	if accessTokenScope != "" {
