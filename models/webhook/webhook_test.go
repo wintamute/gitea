@@ -73,8 +73,8 @@ func TestWebhook_EventsArray(t *testing.T) {
 		"pull_request_milestone", "pull_request_comment", "pull_request_review_approved",
 		"pull_request_review_rejected", "pull_request_review_comment", "pull_request_sync",
 		"pull_request_review_request", "wiki", "repository", "release", "package", "status",
-		"admin_user", "admin_user_create", "admin_user_delete", "admin_user_update",
-		"admin_user_suspend", "workflow_run", "workflow_job",
+		"admin_user_create", "admin_user_delete", "admin_user_update", "admin_user_suspend",
+		"workflow_run", "workflow_job",
 	},
 		(&Webhook{
 			HookEvent: &webhook_module.HookEvent{SendEverything: true},

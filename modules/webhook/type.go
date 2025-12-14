@@ -36,7 +36,6 @@ const (
 
 	// Admin-scoped events (system webhooks)
 	// Emitted for administrative actions such as user lifecycle changes
-	HookEventAdminUser        HookEventType = "admin_user"
 	HookEventAdminUserCreate  HookEventType = "admin_user_create"
 	HookEventAdminUserDelete  HookEventType = "admin_user_delete"
 	HookEventAdminUserUpdate  HookEventType = "admin_user_update"
@@ -77,7 +76,6 @@ func AllEvents() []HookEventType {
 		HookEventPackage,
 		HookEventStatus,
 		// admin/system
-		HookEventAdminUser,
 		HookEventAdminUserCreate,
 		HookEventAdminUserDelete,
 		HookEventAdminUserUpdate,
@@ -103,7 +101,7 @@ func (h HookEventType) Event() string {
 		return "pull_request_rejected"
 	case HookEventPullRequestReviewComment:
 		return "pull_request_comment"
-	case HookEventAdminUser, HookEventAdminUserCreate, HookEventAdminUserDelete, HookEventAdminUserUpdate, HookEventAdminUserSuspend:
+	case HookEventAdminUserCreate, HookEventAdminUserDelete, HookEventAdminUserUpdate, HookEventAdminUserSuspend:
 		return "admin_user"
 	default:
 		return string(h)
