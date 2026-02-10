@@ -3749,5 +3749,14 @@
   "git.filemode.normal_file": "Regular",
   "git.filemode.executable_file": "Executable",
   "git.filemode.symbolic_link": "Symlink",
-  "git.filemode.submodule": "Submodule"
+  "git.filemode.submodule": "Submodule",
+  "systemwebhook.settings.event_header_system": "System Events",
+  "systemwebhook.settings.event_user_create": "User Created",
+  "systemwebhook.settings.event_user_create_desc": "A new user account is created.",
+  "systemwebhook.settings.event_user_delete": "User Deleted",
+  "systemwebhook.settings.event_user_delete_desc": "A user account is deleted.",
+  "systemwebhook.settings.event_user_update": "User Updated",
+  "systemwebhook.settings.event_user_update_desc": "A user account profile is updated.",
+  "systemwebhook.settings.event_user_prohibit_login": "User Login Prohibited",
+  "systemwebhook.settings.event_user_prohibit_login_desc": "A user login is prohibited or allowed."
 }

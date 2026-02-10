@@ -82,4 +82,10 @@ type Notifier interface {
 	WorkflowRunStatusUpdate(ctx context.Context, repo *repo_model.Repository, sender *user_model.User, run *actions_model.ActionRun)
 
 	WorkflowJobStatusUpdate(ctx context.Context, repo *repo_model.Repository, sender *user_model.User, job *actions_model.ActionRunJob, task *actions_model.ActionTask)
+
+	// System events
+	CreateUser(ctx context.Context, doer, newUser *user_model.User)
+	DeleteUser(ctx context.Context, doer, deletedUser *user_model.User)
+	UpdateUser(ctx context.Context, doer, user *user_model.User)
+	ProhibitLoginUser(ctx context.Context, doer, user *user_model.User, prohibited bool)
 }

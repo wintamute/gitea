@@ -191,6 +191,12 @@ func (feishuConvertor) WorkflowJob(p *api.WorkflowJobPayload) (FeishuPayload, er
 	return newFeishuTextPayload(text), nil
 }
 
+func (feishuConvertor) User(p *api.UserPayload) (FeishuPayload, error) {
+	text, _ := getUserPayloadInfo(p, noneLinkFormatter, true)
+
+	return newFeishuTextPayload(text), nil
+}
+
 // feishuGenSign generates a signature for Feishu webhook
 // https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot
 func feishuGenSign(secret string, timestamp int64) string {

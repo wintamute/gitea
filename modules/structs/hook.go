@@ -150,6 +150,7 @@ var (
 	_ Payloader = &RepositoryPayload{}
 	_ Payloader = &ReleasePayload{}
 	_ Payloader = &PackagePayload{}
+	_ Payloader = &UserPayload{}
 )
 
 // CreatePayload represents a payload information of create event.
@@ -640,5 +641,33 @@ type WorkflowJobPayload struct {
 
 // JSONPayload implements Payload
 func (p *WorkflowJobPayload) JSONPayload() ([]byte, error) {
+	return json.MarshalIndent(p, "", "  ")
+}
+
+// HookUserAction defines hook user action type
+type HookUserAction string
+
+// all user actions
+const (
+	HookUserCreated    HookUserAction = "created"
+	HookUserDeleted    HookUserAction = "deleted"
+	HookUserUpdated    HookUserAction = "updated"
+	HookUserProhibited HookUserAction = "prohibited"
+	HookUserAllowed    HookUserAction = "allowed"
+)
+
+// UserPayload represents a payload information of user event.
+// This event is triggered when a user is created, deleted, updated, or has login prohibited/allowed on the system level.
+type UserPayload struct {
+	// The action performed on the user (created, deleted)
+	Action HookUserAction `json:"action"`
+	// The user that was acted upon
+	User *User `json:"user"`
+	// The user who performed the action (admin or the user themselves for self-registration)
+	Sender *User `json:"sender"`
+}
+
+// JSONPayload implements Payload
+func (p *UserPayload) JSONPayload() ([]byte, error) {
 	return json.MarshalIndent(p, "", "  ")
 }

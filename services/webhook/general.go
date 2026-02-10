@@ -389,6 +389,33 @@ func getWorkflowJobPayloadInfo(p *api.WorkflowJobPayload, linkFormatter linkForm
 	return text, color
 }
 
+func getUserPayloadInfo(p *api.UserPayload, linkFormatter linkFormatter, withSender bool) (text string, color int) {
+	userLink := linkFormatter(setting.AppURL+url.PathEscape(p.User.UserName), p.User.UserName)
+
+	switch p.Action {
+	case api.HookUserCreated:
+		text = "User created: " + userLink
+		color = greenColor
+	case api.HookUserDeleted:
+		text = "User deleted: " + p.User.UserName
+		color = redColor
+	case api.HookUserUpdated:
+		text = "User updated: " + userLink
+		color = yellowColor
+	case api.HookUserProhibited:
+		text = "User login prohibited: " + userLink
+		color = redColor
+	case api.HookUserAllowed:
+		text = "User login allowed: " + userLink
+		color = greenColor
+	}
+	if withSender && p.Sender != nil {
+		text += " by " + linkFormatter(setting.AppURL+url.PathEscape(p.Sender.UserName), p.Sender.UserName)
+	}
+
+	return text, color
+}
+
 // ToHook convert models.Webhook to api.Hook
 // This function is not part of the convert package to prevent an import cycle
 func ToHook(repoLink string, w *webhook_model.Webhook) (*api.Hook, error) {

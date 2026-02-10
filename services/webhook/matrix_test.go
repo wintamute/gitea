@@ -190,6 +190,28 @@ func TestMatrixPayload(t *testing.T) {
 		assert.Equal(t, "[[test/repo](http://localhost:3000/test/repo)] Release created: [v1.0](http://localhost:3000/test/repo/releases/tag/v1.0) by [user1](https://try.gitea.io/user1)", pl.Body)
 		assert.Equal(t, `[<a href="http://localhost:3000/test/repo">test/repo</a>] Release created: <a href="http://localhost:3000/test/repo/releases/tag/v1.0">v1.0</a> by <a href="https://try.gitea.io/user1">user1</a>`, pl.FormattedBody)
 	})
+
+	t.Run("UserCreated", func(t *testing.T) {
+		p := userCreatedTestPayload()
+
+		pl, err := mc.User(p)
+		require.NoError(t, err)
+		require.NotNil(t, pl)
+
+		assert.Equal(t, "User created: [newuser](https://try.gitea.io/newuser) by [admin1](https://try.gitea.io/admin1)", pl.Body)
+		assert.Equal(t, `User created: <a href="https://try.gitea.io/newuser">newuser</a> by <a href="https://try.gitea.io/admin1">admin1</a>`, pl.FormattedBody)
+	})
+
+	t.Run("UserDeleted", func(t *testing.T) {
+		p := userDeletedTestPayload()
+
+		pl, err := mc.User(p)
+		require.NoError(t, err)
+		require.NotNil(t, pl)
+
+		assert.Equal(t, "User deleted: deleteduser by [admin1](https://try.gitea.io/admin1)", pl.Body)
+		assert.Equal(t, `User deleted: deleteduser by <a href="https://try.gitea.io/admin1">admin1</a>`, pl.FormattedBody)
+	})
 }
 
 func TestMatrixJSONPayload(t *testing.T) {

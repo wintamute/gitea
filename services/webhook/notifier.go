@@ -1055,3 +1055,56 @@ func (*webhookNotifier) WorkflowRunStatusUpdate(ctx context.Context, repo *repo_
 		log.Error("PrepareWebhooks: %v", err)
 	}
 }
+
+func (m *webhookNotifier) CreateUser(ctx context.Context, doer, newUser *user_model.User) {
+	// doer may be nil for self-registration
+	var sender *api.User
+	if doer != nil {
+		sender = convert.ToUser(ctx, doer, nil)
+	} else {
+		sender = convert.ToUser(ctx, newUser, nil)
+	}
+
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventUserCreate, &api.UserPayload{
+		Action: api.HookUserCreated,
+		User:   convert.ToUser(ctx, newUser, doer),
+		Sender: sender,
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [user_id: %d]: %v", newUser.ID, err)
+	}
+}
+
+func (m *webhookNotifier) DeleteUser(ctx context.Context, doer, deletedUser *user_model.User) {
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventUserDelete, &api.UserPayload{
+		Action: api.HookUserDeleted,
+		User:   convert.ToUser(ctx, deletedUser, doer),
+		Sender: convert.ToUser(ctx, doer, nil),
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [user_id: %d]: %v", deletedUser.ID, err)
+	}
+}
+
+func (m *webhookNotifier) UpdateUser(ctx context.Context, doer, user *user_model.User) {
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventUserUpdate, &api.UserPayload{
+		Action: api.HookUserUpdated,
+		User:   convert.ToUser(ctx, user, doer),
+		Sender: convert.ToUser(ctx, doer, nil),
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [user_id: %d]: %v", user.ID, err)
+	}
+}
+
+func (m *webhookNotifier) ProhibitLoginUser(ctx context.Context, doer, user *user_model.User, prohibited bool) {
+	action := api.HookUserAllowed
+	if prohibited {
+		action = api.HookUserProhibited
+	}
+
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventUserProhibitLogin, &api.UserPayload{
+		Action: action,
+		User:   convert.ToUser(ctx, user, doer),
+		Sender: convert.ToUser(ctx, doer, nil),
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [user_id: %d]: %v", user.ID, err)
+	}
+}

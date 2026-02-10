@@ -192,6 +192,12 @@ func (telegramConvertor) WorkflowJob(p *api.WorkflowJobPayload) (TelegramPayload
 	return createTelegramPayloadHTML(text), nil
 }
 
+func (telegramConvertor) User(p *api.UserPayload) (TelegramPayload, error) {
+	text, _ := getUserPayloadInfo(p, htmlLinkFormatter, true)
+
+	return createTelegramPayloadHTML(text), nil
+}
+
 func createTelegramPayloadHTML(msgHTML string) TelegramPayload {
 	// https://core.telegram.org/bots/api#formatting-options
 	return TelegramPayload{
