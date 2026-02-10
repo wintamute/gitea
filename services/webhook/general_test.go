@@ -610,6 +610,86 @@ func TestGetReleasePayloadInfo(t *testing.T) {
 	}
 }
 
+func userCreatedTestPayload() *api.UserPayload {
+	return &api.UserPayload{
+		Action: api.HookUserCreated,
+		User: &api.User{
+			UserName:  "newuser",
+			AvatarURL: "http://localhost:3000/newuser/avatar",
+			FullName:  "New User",
+			Email:     "newuser@example.com",
+		},
+		Sender: &api.User{
+			UserName:  "admin1",
+			AvatarURL: "http://localhost:3000/admin1/avatar",
+		},
+	}
+}
+
+func userDeletedTestPayload() *api.UserPayload {
+	return &api.UserPayload{
+		Action: api.HookUserDeleted,
+		User: &api.User{
+			UserName:  "deleteduser",
+			AvatarURL: "http://localhost:3000/deleteduser/avatar",
+			FullName:  "Deleted User",
+			Email:     "deleteduser@example.com",
+		},
+		Sender: &api.User{
+			UserName:  "admin1",
+			AvatarURL: "http://localhost:3000/admin1/avatar",
+		},
+	}
+}
+
+func userUpdatedTestPayload() *api.UserPayload {
+	return &api.UserPayload{
+		Action: api.HookUserUpdated,
+		User: &api.User{
+			UserName:  "updateduser",
+			AvatarURL: "http://localhost:3000/updateduser/avatar",
+			FullName:  "Updated User",
+			Email:     "updateduser@example.com",
+		},
+		Sender: &api.User{
+			UserName:  "admin1",
+			AvatarURL: "http://localhost:3000/admin1/avatar",
+		},
+	}
+}
+
+func userProhibitedTestPayload() *api.UserPayload {
+	return &api.UserPayload{
+		Action: api.HookUserProhibited,
+		User: &api.User{
+			UserName:  "prohibiteduser",
+			AvatarURL: "http://localhost:3000/prohibiteduser/avatar",
+			FullName:  "Prohibited User",
+			Email:     "prohibiteduser@example.com",
+		},
+		Sender: &api.User{
+			UserName:  "admin1",
+			AvatarURL: "http://localhost:3000/admin1/avatar",
+		},
+	}
+}
+
+func userAllowedTestPayload() *api.UserPayload {
+	return &api.UserPayload{
+		Action: api.HookUserAllowed,
+		User: &api.User{
+			UserName:  "alloweduser",
+			AvatarURL: "http://localhost:3000/alloweduser/avatar",
+			FullName:  "Allowed User",
+			Email:     "alloweduser@example.com",
+		},
+		Sender: &api.User{
+			UserName:  "admin1",
+			AvatarURL: "http://localhost:3000/admin1/avatar",
+		},
+	}
+}
+
 func TestGetIssueCommentPayloadInfo(t *testing.T) {
 	p := pullRequestCommentTestPayload()
 
@@ -644,6 +724,46 @@ func TestGetIssueCommentPayloadInfo(t *testing.T) {
 		text, issueTitle, color := getIssueCommentPayloadInfo(p, noneLinkFormatter, true)
 		assert.Equal(t, c.text, text, "case %d", i)
 		assert.Equal(t, c.issueTitle, issueTitle, "case %d", i)
+		assert.Equal(t, c.color, color, "case %d", i)
+	}
+}
+
+func TestGetUserPayloadInfo(t *testing.T) {
+	cases := []struct {
+		payload *api.UserPayload
+		text    string
+		color   int
+	}{
+		{
+			userCreatedTestPayload(),
+			"User created: newuser by admin1",
+			greenColor,
+		},
+		{
+			userDeletedTestPayload(),
+			"User deleted: deleteduser by admin1",
+			redColor,
+		},
+		{
+			userUpdatedTestPayload(),
+			"User updated: updateduser by admin1",
+			yellowColor,
+		},
+		{
+			userProhibitedTestPayload(),
+			"User login prohibited: prohibiteduser by admin1",
+			redColor,
+		},
+		{
+			userAllowedTestPayload(),
+			"User login allowed: alloweduser by admin1",
+			greenColor,
+		},
+	}
+
+	for i, c := range cases {
+		text, color := getUserPayloadInfo(c.payload, noneLinkFormatter, true)
+		assert.Equal(t, c.text, text, "case %d", i)
 		assert.Equal(t, c.color, color, "case %d", i)
 	}
 }

@@ -12,6 +12,7 @@ import (
 
 	webhook_model "code.gitea.io/gitea/models/webhook"
 	"code.gitea.io/gitea/modules/git"
+	"code.gitea.io/gitea/modules/setting"
 	api "code.gitea.io/gitea/modules/structs"
 	"code.gitea.io/gitea/modules/util"
 	webhook_module "code.gitea.io/gitea/modules/webhook"
@@ -186,6 +187,12 @@ func (dingtalkConvertor) WorkflowJob(p *api.WorkflowJobPayload) (DingtalkPayload
 	text, _ := getWorkflowJobPayloadInfo(p, noneLinkFormatter, true)
 
 	return createDingtalkPayload(text, text, "Workflow Job", p.WorkflowJob.HTMLURL), nil
+}
+
+func (dingtalkConvertor) User(p *api.UserPayload) (DingtalkPayload, error) {
+	text, _ := getUserPayloadInfo(p, noneLinkFormatter, true)
+
+	return createDingtalkPayload(text, text, "view user", setting.AppURL+p.User.UserName), nil
 }
 
 func createDingtalkPayload(title, text, singleTitle, singleURL string) DingtalkPayload {

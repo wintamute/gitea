@@ -213,6 +213,30 @@ func TestDingTalkPayload(t *testing.T) {
 		assert.Equal(t, "view release", pl.ActionCard.SingleTitle)
 		assert.Equal(t, "http://localhost:3000/test/repo/releases/tag/v1.0", parseRealSingleURL(pl.ActionCard.SingleURL))
 	})
+
+	t.Run("UserCreated", func(t *testing.T) {
+		p := userCreatedTestPayload()
+
+		pl, err := dc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User created: newuser by admin1", pl.ActionCard.Text)
+		assert.Equal(t, "User created: newuser by admin1", pl.ActionCard.Title)
+		assert.Equal(t, "view user", pl.ActionCard.SingleTitle)
+		assert.Equal(t, "https://try.gitea.io/newuser", parseRealSingleURL(pl.ActionCard.SingleURL))
+	})
+
+	t.Run("UserDeleted", func(t *testing.T) {
+		p := userDeletedTestPayload()
+
+		pl, err := dc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User deleted: deleteduser by admin1", pl.ActionCard.Text)
+		assert.Equal(t, "User deleted: deleteduser by admin1", pl.ActionCard.Title)
+		assert.Equal(t, "view user", pl.ActionCard.SingleTitle)
+		assert.Equal(t, "https://try.gitea.io/deleteduser", parseRealSingleURL(pl.ActionCard.SingleURL))
+	})
 }
 
 func TestDingTalkJSONPayload(t *testing.T) {

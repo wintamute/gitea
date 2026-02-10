@@ -172,6 +172,24 @@ good job`, pl.Message)
 
 		assert.Equal(t, `[<a href="http://localhost:3000/test/repo" rel="nofollow">test/repo</a>] Release created: <a href="http://localhost:3000/test/repo/releases/tag/v1.0" rel="nofollow">v1.0</a> by <a href="https://try.gitea.io/user1" rel="nofollow">user1</a>`, pl.Message)
 	})
+
+	t.Run("UserCreated", func(t *testing.T) {
+		p := userCreatedTestPayload()
+
+		pl, err := tc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, `User created: <a href="https://try.gitea.io/newuser" rel="nofollow">newuser</a> by <a href="https://try.gitea.io/admin1" rel="nofollow">admin1</a>`, pl.Message)
+	})
+
+	t.Run("UserDeleted", func(t *testing.T) {
+		p := userDeletedTestPayload()
+
+		pl, err := tc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, `User deleted: deleteduser by <a href="https://try.gitea.io/admin1" rel="nofollow">admin1</a>`, pl.Message)
+	})
 }
 
 func TestTelegramJSONPayload(t *testing.T) {

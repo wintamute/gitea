@@ -290,6 +290,12 @@ func (d discordConvertor) WorkflowJob(p *api.WorkflowJobPayload) (DiscordPayload
 	return d.createPayload(p.Sender, text, "", p.WorkflowJob.HTMLURL, color), nil
 }
 
+func (d discordConvertor) User(p *api.UserPayload) (DiscordPayload, error) {
+	text, color := getUserPayloadInfo(p, noneLinkFormatter, false)
+
+	return d.createPayload(p.Sender, text, "", setting.AppURL+p.User.UserName, color), nil
+}
+
 func newDiscordRequest(_ context.Context, w *webhook_model.Webhook, t *webhook_model.HookTask) (*http.Request, []byte, error) {
 	meta := &DiscordMeta{}
 	if err := json.Unmarshal([]byte(w.Meta), meta); err != nil {

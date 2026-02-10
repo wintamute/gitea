@@ -19,10 +19,11 @@
 			</div>
 		</div>
 		{{template "repo/settings/webhook/settings" dict
-			"BaseLink" .BaseLink
-			"Webhook" .Webhook
-			"UseAuthorizationHeader" "optional"
-			"UseRequestSecret" "optional"
+    			"BaseLink" .BaseLink
+    			"Webhook" .Webhook
+    			"UseAuthorizationHeader" "optional"
+    			"UseRequestSecret" "optional"
+    			"PageIsAdminSystemHooks" .PageIsAdminSystemHooks
 		}}
 	</form>
 {{end}}

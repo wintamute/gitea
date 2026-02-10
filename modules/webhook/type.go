@@ -32,6 +32,12 @@ const (
 	HookEventRelease                   HookEventType = "release"
 	HookEventPackage                   HookEventType = "package"
 	HookEventStatus                    HookEventType = "status"
+
+	// System events (user management)
+	HookEventUserCreate        HookEventType = "user_create"
+	HookEventUserDelete        HookEventType = "user_delete"
+	HookEventUserUpdate        HookEventType = "user_update"
+	HookEventUserProhibitLogin HookEventType = "user_prohibit_login"
 	// once a new event added here, please also added to AllEvents() function
 
 	// FIXME: This event should be a group of pull_request_review_xxx events
@@ -70,6 +76,10 @@ func AllEvents() []HookEventType {
 		HookEventStatus,
 		HookEventWorkflowRun,
 		HookEventWorkflowJob,
+		HookEventUserCreate,
+		HookEventUserDelete,
+		HookEventUserUpdate,
+		HookEventUserProhibitLogin,
 	}
 }
 

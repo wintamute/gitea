@@ -416,6 +416,44 @@ func TestMSTeamsPayload(t *testing.T) {
 		assert.Len(t, pl.PotentialAction[0].Targets, 1)
 		assert.Equal(t, "http://localhost:3000/test/repo/releases/tag/v1.0", pl.PotentialAction[0].Targets[0].URI)
 	})
+
+	t.Run("UserCreated", func(t *testing.T) {
+		p := userCreatedTestPayload()
+
+		pl, err := mc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User created: newuser", pl.Title)
+		assert.Equal(t, "User created: newuser", pl.Summary)
+		assert.Len(t, pl.Sections, 1)
+		assert.Equal(t, "admin1", pl.Sections[0].ActivitySubtitle)
+		assert.Empty(t, pl.Sections[0].Text)
+		assert.Len(t, pl.Sections[0].Facts, 1)
+		assert.Equal(t, "User:", pl.Sections[0].Facts[0].Name)
+		assert.Equal(t, "newuser", pl.Sections[0].Facts[0].Value)
+		assert.Len(t, pl.PotentialAction, 1)
+		assert.Len(t, pl.PotentialAction[0].Targets, 1)
+		assert.Equal(t, "https://try.gitea.io/newuser", pl.PotentialAction[0].Targets[0].URI)
+	})
+
+	t.Run("UserDeleted", func(t *testing.T) {
+		p := userDeletedTestPayload()
+
+		pl, err := mc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User deleted: deleteduser", pl.Title)
+		assert.Equal(t, "User deleted: deleteduser", pl.Summary)
+		assert.Len(t, pl.Sections, 1)
+		assert.Equal(t, "admin1", pl.Sections[0].ActivitySubtitle)
+		assert.Empty(t, pl.Sections[0].Text)
+		assert.Len(t, pl.Sections[0].Facts, 1)
+		assert.Equal(t, "User:", pl.Sections[0].Facts[0].Name)
+		assert.Equal(t, "deleteduser", pl.Sections[0].Facts[0].Value)
+		assert.Len(t, pl.PotentialAction, 1)
+		assert.Len(t, pl.PotentialAction[0].Targets, 1)
+		assert.Equal(t, "https://try.gitea.io/deleteduser", pl.PotentialAction[0].Targets[0].URI)
+	})
 }
 
 func TestMSTeamsJSONPayload(t *testing.T) {

@@ -101,8 +101,15 @@ func checkCreateHookOption(ctx *context.APIContext, form *api.CreateHookOption) 
 	return true
 }
 
+func setSystemHookOption(form *api.CreateHookOption) {
+	if form.Config["is_system_webhook"] == "" {
+		form.Config["is_system_webhook"] = "true"
+	}
+}
+
 // AddSystemHook add a system hook
 func AddSystemHook(ctx *context.APIContext, form *api.CreateHookOption) {
+	setSystemHookOption(form)
 	hook, ok := addHook(ctx, form, 0, 0)
 	if ok {
 		h, err := webhook_service.ToHook(setting.AppSubURL+"/-/admin", hook)
@@ -193,6 +200,12 @@ func updateHookEvents(events []string) webhook_module.HookEvents {
 	hookEvents[webhook_module.HookEventPullRequestReview] = pullHook(events, "pull_request_review")
 	hookEvents[webhook_module.HookEventPullRequestReviewRequest] = pullHook(events, string(webhook_module.HookEventPullRequestReviewRequest))
 	hookEvents[webhook_module.HookEventPullRequestSync] = pullHook(events, string(webhook_module.HookEventPullRequestSync))
+
+	// System events
+	hookEvents[webhook_module.HookEventUserCreate] = util.SliceContainsString(events, string(webhook_module.HookEventUserCreate), true)
+	hookEvents[webhook_module.HookEventUserDelete] = util.SliceContainsString(events, string(webhook_module.HookEventUserDelete), true)
+	hookEvents[webhook_module.HookEventUserUpdate] = util.SliceContainsString(events, string(webhook_module.HookEventUserUpdate), true)
+	hookEvents[webhook_module.HookEventUserProhibitLogin] = util.SliceContainsString(events, string(webhook_module.HookEventUserProhibitLogin), true)
 	return hookEvents
 }
 
