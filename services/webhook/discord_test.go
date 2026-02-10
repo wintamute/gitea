@@ -280,6 +280,81 @@ func TestDiscordPayload(t *testing.T) {
 		assert.Equal(t, setting.AppURL+p.Sender.UserName, pl.Embeds[0].Author.URL)
 		assert.Equal(t, p.Sender.AvatarURL, pl.Embeds[0].Author.IconURL)
 	})
+
+	t.Run("UserCreated", func(t *testing.T) {
+		p := userCreatedTestPayload()
+
+		pl, err := dc.User(p)
+		require.NoError(t, err)
+
+		assert.Len(t, pl.Embeds, 1)
+		assert.Equal(t, "User created: newuser", pl.Embeds[0].Title)
+		assert.Empty(t, pl.Embeds[0].Description)
+		assert.Equal(t, setting.AppURL+"newuser", pl.Embeds[0].URL)
+		assert.Equal(t, p.Sender.UserName, pl.Embeds[0].Author.Name)
+		assert.Equal(t, setting.AppURL+p.Sender.UserName, pl.Embeds[0].Author.URL)
+		assert.Equal(t, p.Sender.AvatarURL, pl.Embeds[0].Author.IconURL)
+	})
+
+	t.Run("UserDeleted", func(t *testing.T) {
+		p := userDeletedTestPayload()
+
+		pl, err := dc.User(p)
+		require.NoError(t, err)
+
+		assert.Len(t, pl.Embeds, 1)
+		assert.Equal(t, "User deleted: deleteduser", pl.Embeds[0].Title)
+		assert.Empty(t, pl.Embeds[0].Description)
+		assert.Equal(t, setting.AppURL+"deleteduser", pl.Embeds[0].URL)
+		assert.Equal(t, p.Sender.UserName, pl.Embeds[0].Author.Name)
+		assert.Equal(t, setting.AppURL+p.Sender.UserName, pl.Embeds[0].Author.URL)
+		assert.Equal(t, p.Sender.AvatarURL, pl.Embeds[0].Author.IconURL)
+	})
+
+	t.Run("UserUpdated", func(t *testing.T) {
+		p := userUpdatedTestPayload()
+
+		pl, err := dc.User(p)
+		require.NoError(t, err)
+
+		assert.Len(t, pl.Embeds, 1)
+		assert.Equal(t, "User updated: updateduser", pl.Embeds[0].Title)
+		assert.Empty(t, pl.Embeds[0].Description)
+		assert.Equal(t, setting.AppURL+"updateduser", pl.Embeds[0].URL)
+		assert.Equal(t, p.Sender.UserName, pl.Embeds[0].Author.Name)
+		assert.Equal(t, setting.AppURL+p.Sender.UserName, pl.Embeds[0].Author.URL)
+		assert.Equal(t, p.Sender.AvatarURL, pl.Embeds[0].Author.IconURL)
+	})
+
+	t.Run("UserProhibited", func(t *testing.T) {
+		p := userProhibitedTestPayload()
+
+		pl, err := dc.User(p)
+		require.NoError(t, err)
+
+		assert.Len(t, pl.Embeds, 1)
+		assert.Equal(t, "User login prohibited: prohibiteduser", pl.Embeds[0].Title)
+		assert.Empty(t, pl.Embeds[0].Description)
+		assert.Equal(t, setting.AppURL+"prohibiteduser", pl.Embeds[0].URL)
+		assert.Equal(t, p.Sender.UserName, pl.Embeds[0].Author.Name)
+		assert.Equal(t, setting.AppURL+p.Sender.UserName, pl.Embeds[0].Author.URL)
+		assert.Equal(t, p.Sender.AvatarURL, pl.Embeds[0].Author.IconURL)
+	})
+
+	t.Run("UserAllowed", func(t *testing.T) {
+		p := userAllowedTestPayload()
+
+		pl, err := dc.User(p)
+		require.NoError(t, err)
+
+		assert.Len(t, pl.Embeds, 1)
+		assert.Equal(t, "User login allowed: alloweduser", pl.Embeds[0].Title)
+		assert.Empty(t, pl.Embeds[0].Description)
+		assert.Equal(t, setting.AppURL+"alloweduser", pl.Embeds[0].URL)
+		assert.Equal(t, p.Sender.UserName, pl.Embeds[0].Author.Name)
+		assert.Equal(t, setting.AppURL+p.Sender.UserName, pl.Embeds[0].Author.URL)
+		assert.Equal(t, p.Sender.AvatarURL, pl.Embeds[0].Author.IconURL)
+	})
 }
 
 func TestDiscordJSONPayload(t *testing.T) {

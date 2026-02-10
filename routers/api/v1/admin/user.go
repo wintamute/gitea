@@ -29,6 +29,7 @@ import (
 	"gitea.dev/services/context"
 	"gitea.dev/services/convert"
 	"gitea.dev/services/mailer"
+	notify_service "gitea.dev/services/notify"
 	user_service "gitea.dev/services/user"
 )
 
@@ -158,6 +159,9 @@ func CreateUser(ctx *context.APIContext) {
 	if form.SendNotify {
 		mailer.SendRegisterNotifyMail(u)
 	}
+
+	notify_service.CreateUser(ctx, ctx.Doer, u)
+
 	ctx.JSON(http.StatusCreated, convert.ToUser(ctx, u, ctx.Doer))
 }
 
@@ -191,6 +195,9 @@ func EditUser(ctx *context.APIContext) {
 	//     "$ref": "#/responses/validationError"
 
 	form := web.GetForm(ctx).(*api.EditUserOption)
+
+	// Save old ProhibitLogin value to detect changes
+	oldProhibitLogin := ctx.ContextUser.ProhibitLogin
 
 	authOpts := &user_service.UpdateAuthOptions{
 		LoginSource:        optional.FromNonDefault(form.SourceID),
@@ -256,6 +263,14 @@ func EditUser(ctx *context.APIContext) {
 
 	log.Trace("Account profile updated by admin (%s): %s", ctx.Doer.Name, ctx.ContextUser.Name)
 
+	// Send notifications for user updates
+	notify_service.UpdateUser(ctx, ctx.Doer, ctx.ContextUser)
+
+	// Check if ProhibitLogin changed and send notification
+	if form.ProhibitLogin != nil && *form.ProhibitLogin != oldProhibitLogin {
+		notify_service.ProhibitLoginUser(ctx, ctx.Doer, ctx.ContextUser, *form.ProhibitLogin)
+	}
+
 	ctx.JSON(http.StatusOK, convert.ToUser(ctx, ctx.ContextUser, ctx.Doer))
 }
 
@@ -296,6 +311,9 @@ func DeleteUser(ctx *context.APIContext) {
 		ctx.APIError(http.StatusUnprocessableEntity, "you cannot delete yourself")
 		return
 	}
+
+	// Notify before deletion so we have user data for the payload
+	notify_service.DeleteUser(ctx, ctx.Doer, ctx.ContextUser)
 
 	if err := user_service.DeleteUser(ctx, ctx.ContextUser, ctx.FormBool("purge")); err != nil {
 		if repo_model.IsErrUserOwnRepos(err) ||

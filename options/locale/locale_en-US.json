@@ -3924,5 +3924,14 @@
   "actions.general.cross_repo_desc": "Allow the selected repositories to be accessed (read-only) by all the repositories in this owner with GITEA_TOKEN when running Actions jobs.",
   "actions.general.cross_repo_selected": "Selected repositories",
   "actions.general.cross_repo_target_repos": "Target Repositories",
-  "actions.general.cross_repo_add": "Add Target Repository"
+  "actions.general.cross_repo_add": "Add Target Repository",
+  "systemwebhook.settings.event_header_system": "System Events",
+  "systemwebhook.settings.event_user_create": "User Created",
+  "systemwebhook.settings.event_user_create_desc": "A new user account is created.",
+  "systemwebhook.settings.event_user_delete": "User Deleted",
+  "systemwebhook.settings.event_user_delete_desc": "A user account is deleted.",
+  "systemwebhook.settings.event_user_update": "User Updated",
+  "systemwebhook.settings.event_user_update_desc": "A user account profile is updated.",
+  "systemwebhook.settings.event_user_prohibit_login": "User Login Prohibited",
+  "systemwebhook.settings.event_user_prohibit_login_desc": "A user login is prohibited or allowed."
 }

@@ -155,6 +155,51 @@ func TestSlackPayload(t *testing.T) {
 
 		assert.Equal(t, "[<http://localhost:3000/test/repo|test/repo>] Release created: <http://localhost:3000/test/repo/releases/tag/v1.0|v1.0> by <https://try.gitea.io/user1|user1>", pl.Text)
 	})
+
+	t.Run("UserCreated", func(t *testing.T) {
+		p := userCreatedTestPayload()
+
+		pl, err := sc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User created: <https://try.gitea.io/newuser|newuser> by <https://try.gitea.io/admin1|admin1>", pl.Text)
+	})
+
+	t.Run("UserDeleted", func(t *testing.T) {
+		p := userDeletedTestPayload()
+
+		pl, err := sc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User deleted: deleteduser by <https://try.gitea.io/admin1|admin1>", pl.Text)
+	})
+
+	t.Run("UserUpdated", func(t *testing.T) {
+		p := userUpdatedTestPayload()
+
+		pl, err := sc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User updated: <https://try.gitea.io/updateduser|updateduser> by <https://try.gitea.io/admin1|admin1>", pl.Text)
+	})
+
+	t.Run("UserProhibited", func(t *testing.T) {
+		p := userProhibitedTestPayload()
+
+		pl, err := sc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User login prohibited: <https://try.gitea.io/prohibiteduser|prohibiteduser> by <https://try.gitea.io/admin1|admin1>", pl.Text)
+	})
+
+	t.Run("UserAllowed", func(t *testing.T) {
+		p := userAllowedTestPayload()
+
+		pl, err := sc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User login allowed: <https://try.gitea.io/alloweduser|alloweduser> by <https://try.gitea.io/admin1|admin1>", pl.Text)
+	})
 }
 
 func TestSlackJSONPayload(t *testing.T) {

@@ -154,6 +154,24 @@ func TestFeishuPayload(t *testing.T) {
 
 		assert.Equal(t, "[test/repo] Release created: v1.0 by user1", pl.Content.Text)
 	})
+
+	t.Run("UserCreated", func(t *testing.T) {
+		p := userCreatedTestPayload()
+
+		pl, err := fc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User created: newuser by admin1", pl.Content.Text)
+	})
+
+	t.Run("UserDeleted", func(t *testing.T) {
+		p := userDeletedTestPayload()
+
+		pl, err := fc.User(p)
+		require.NoError(t, err)
+
+		assert.Equal(t, "User deleted: deleteduser by admin1", pl.Content.Text)
+	})
 }
 
 func TestFeishuJSONPayload(t *testing.T) {

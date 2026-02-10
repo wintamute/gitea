@@ -185,6 +185,12 @@ func (s slackConvertor) WorkflowJob(p *api.WorkflowJobPayload) (SlackPayload, er
 	return s.createPayload(text, nil), nil
 }
 
+func (s slackConvertor) User(p *api.UserPayload) (SlackPayload, error) {
+	text, _ := getUserPayloadInfo(p, SlackLinkFormatter, true)
+
+	return s.createPayload(text, nil), nil
+}
+
 // Push implements payloadConvertor Push method
 func (s slackConvertor) Push(p *api.PushPayload) (SlackPayload, error) {
 	// n new commits

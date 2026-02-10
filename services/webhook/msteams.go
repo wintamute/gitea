@@ -13,6 +13,7 @@ import (
 
 	webhook_model "gitea.dev/models/webhook"
 	"gitea.dev/modules/git"
+	"gitea.dev/modules/setting"
 	api "gitea.dev/modules/structs"
 	"gitea.dev/modules/util"
 	webhook_module "gitea.dev/modules/webhook"
@@ -343,6 +344,20 @@ func (msteamsConvertor) WorkflowJob(p *api.WorkflowJobPayload) (MSTeamsPayload, 
 		p.WorkflowJob.HTMLURL,
 		color,
 		&MSTeamsFact{"WorkflowJob:", p.WorkflowJob.Name},
+	), nil
+}
+
+func (msteamsConvertor) User(p *api.UserPayload) (MSTeamsPayload, error) {
+	title, color := getUserPayloadInfo(p, noneLinkFormatter, false)
+
+	return createMSTeamsPayload(
+		nil,
+		p.Sender,
+		title,
+		"",
+		setting.AppURL+p.User.UserName,
+		color,
+		&MSTeamsFact{"User:", p.User.UserName},
 	), nil
 }
 

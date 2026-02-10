@@ -33,6 +33,7 @@ import (
 	"gitea.dev/services/externalaccount"
 	"gitea.dev/services/forms"
 	"gitea.dev/services/mailer"
+	notify_service "gitea.dev/services/notify"
 	user_service "gitea.dev/services/user"
 
 	"github.com/markbates/goth"
@@ -687,6 +688,10 @@ func createUserInContext(ctx *context.Context, tpl templates.TplName, form any, 
 		return false
 	}
 	log.Trace("Account created: %s", u.Name)
+
+	// For self-registration, the doer is the new user themselves
+	notify_service.CreateUser(ctx, u, u)
+
 	return true
 }
 

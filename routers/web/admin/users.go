@@ -29,6 +29,7 @@ import (
 	"gitea.dev/services/context"
 	"gitea.dev/services/forms"
 	"gitea.dev/services/mailer"
+	notify_service "gitea.dev/services/notify"
 	user_service "gitea.dev/services/user"
 )
 
@@ -206,6 +207,8 @@ func NewUserPost(ctx *context.Context) {
 		mailer.SendRegisterNotifyMail(u)
 	}
 
+	notify_service.CreateUser(ctx, ctx.Doer, u)
+
 	ctx.Flash.Success(ctx.Tr("admin.users.new_success", u.Name))
 	ctx.Redirect(setting.AppSubURL + "/-/admin/users/" + strconv.FormatInt(u.ID, 10))
 }
@@ -366,6 +369,9 @@ func EditUserPost(ctx *context.Context) {
 		}
 	}
 
+	// Save old ProhibitLogin value to detect changes
+	oldProhibitLogin := u.ProhibitLogin
+
 	authOpts := &user_service.UpdateAuthOptions{
 		Password:  optional.FromNonDefault(form.Password),
 		LoginName: optional.Some(form.LoginName),
@@ -449,6 +455,18 @@ func EditUserPost(ctx *context.Context) {
 	}
 	log.Trace("Account profile updated by admin (%s): %s", ctx.Doer.Name, u.Name)
 
+	// Send notifications for user updates
+	notify_service.UpdateUser(ctx, ctx.Doer, u)
+
+	// Check if ProhibitLogin changed and send notification (skip self-prohibition check)
+	newProhibitLogin := form.ProhibitLogin
+	if ctx.Doer.ID == u.ID {
+		newProhibitLogin = false
+	}
+	if newProhibitLogin != oldProhibitLogin {
+		notify_service.ProhibitLoginUser(ctx, ctx.Doer, u, newProhibitLogin)
+	}
+
 	if form.Reset2FA {
 		tf, err := auth.GetTwoFactorByUID(ctx, u.ID)
 		if err != nil && !auth.IsErrTwoFactorNotEnrolled(err) {
@@ -492,6 +510,9 @@ func DeleteUser(ctx *context.Context) {
 		ctx.Redirect(setting.AppSubURL + "/-/admin/users/" + url.PathEscape(ctx.PathParam("userid")))
 		return
 	}
+
+	// Notify before deletion so we have user data for the payload
+	notify_service.DeleteUser(ctx, ctx.Doer, u)
 
 	if err = user_service.DeleteUser(ctx, u, ctx.FormBool("purge")); err != nil {
 		switch {

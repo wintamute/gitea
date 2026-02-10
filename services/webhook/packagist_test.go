@@ -141,6 +141,14 @@ func TestPackagistPayload(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, PackagistPayload{}, pl)
 	})
+
+	t.Run("User", func(t *testing.T) {
+		p := userCreatedTestPayload()
+
+		pl, err := pc.User(p)
+		require.NoError(t, err)
+		require.Equal(t, PackagistPayload{}, pl)
+	})
 }
 
 func TestPackagistJSONPayload(t *testing.T) {
