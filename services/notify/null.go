@@ -219,3 +219,19 @@ func (*NullNotifier) WorkflowRunStatusUpdate(ctx context.Context, repo *repo_mod
 
 func (*NullNotifier) WorkflowJobStatusUpdate(ctx context.Context, repo *repo_model.Repository, sender *user_model.User, job *actions_model.ActionRunJob, task *actions_model.ActionTask) {
 }
+
+// CreateUser places a place holder function
+func (*NullNotifier) CreateUser(ctx context.Context, doer, newUser *user_model.User) {
+}
+
+// DeleteUser places a place holder function
+func (*NullNotifier) DeleteUser(ctx context.Context, doer, deletedUser *user_model.User) {
+}
+
+// UpdateUser places a place holder function
+func (*NullNotifier) UpdateUser(ctx context.Context, doer, user *user_model.User) {
+}
+
+// ProhibitLoginUser places a place holder function
+func (*NullNotifier) ProhibitLoginUser(ctx context.Context, doer, user *user_model.User, prohibited bool) {
+}

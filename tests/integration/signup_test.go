@@ -103,7 +103,7 @@ func TestSignupEmailActive(t *testing.T) {
 		"retype":    "password1",
 	})
 	resp := MakeRequest(t, req, http.StatusOK)
-	assert.Contains(t, resp.Body.String(), `A new confirmation email has been sent to <b>EmAiL-1@example.com</b>.`)
+	assert.Contains(t, resp.Body.String(), `A new confirmation email has been sent to <b>email-1@example.com</b>.`)
 
 	// access "user/activate" means trying to re-send the activation email
 	session := loginUserWithPassword(t, "test-user-1", "password1")

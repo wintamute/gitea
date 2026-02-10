@@ -340,6 +340,52 @@
 				</div>
 			</div>
 		</div>
+		{{if or .PageIsAdminSystemHooks .Webhook.IsSystemWebhook}}
+		<!-- System Events (only shown for system webhooks) -->
+		<div class="fourteen wide column">
+			<label>{{ctx.Locale.Tr "systemwebhook.settings.event_header_system"}}</label>
+		</div>
+		<!-- User Create -->
+		<div class="seven wide column">
+			<div class="field">
+				<div class="ui checkbox">
+					<input name="user_create" type="checkbox" {{if .Webhook.HookEvents.Get "user_create"}}checked{{end}}>
+					<label>{{ctx.Locale.Tr "systemwebhook.settings.event_user_create"}}</label>
+					<span class="help">{{ctx.Locale.Tr "systemwebhook.settings.event_user_create_desc"}}</span>
+				</div>
+			</div>
+		</div>
+		<!-- User Delete -->
+		<div class="seven wide column">
+			<div class="field">
+				<div class="ui checkbox">
+					<input name="user_delete" type="checkbox" {{if .Webhook.HookEvents.Get "user_delete"}}checked{{end}}>
+					<label>{{ctx.Locale.Tr "systemwebhook.settings.event_user_delete"}}</label>
+					<span class="help">{{ctx.Locale.Tr "systemwebhook.settings.event_user_delete_desc"}}</span>
+				</div>
+			</div>
+		</div>
+		<!-- User Update -->
+		<div class="seven wide column">
+			<div class="field">
+				<div class="ui checkbox">
+					<input name="user_update" type="checkbox" {{if .Webhook.HookEvents.Get "user_update"}}checked{{end}}>
+					<label>{{ctx.Locale.Tr "systemwebhook.settings.event_user_update"}}</label>
+					<span class="help">{{ctx.Locale.Tr "systemwebhook.settings.event_user_update_desc"}}</span>
+				</div>
+			</div>
+		</div>
+		<!-- User Prohibit Login -->
+		<div class="seven wide column">
+			<div class="field">
+				<div class="ui checkbox">
+					<input name="user_prohibit_login" type="checkbox" {{if .Webhook.HookEvents.Get "user_prohibit_login"}}checked{{end}}>
+					<label>{{ctx.Locale.Tr "systemwebhook.settings.event_user_prohibit_login"}}</label>
+					<span class="help">{{ctx.Locale.Tr "systemwebhook.settings.event_user_prohibit_login_desc"}}</span>
+				</div>
+			</div>
+		</div>
+		{{end}}
 	</div>
 </div>
 

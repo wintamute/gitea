@@ -235,3 +235,23 @@ func ReplayHookTask(ctx context.Context, w *webhook_model.Webhook, uuid string) 
 
 	return enqueueHookTask(task.ID)
 }
+
+// PrepareSystemWebhooks adds webhooks to task queue for system events (e.g. user creation/deletion).
+// System webhooks are webhooks with RepoID=0, OwnerID=0, and IsSystemWebhook=true.
+func PrepareSystemWebhooks(ctx context.Context, event webhook_module.HookEventType, p api.Payloader) error {
+	ws, err := webhook_model.GetSystemWebhooks(ctx, optional.Some(true))
+	if err != nil {
+		return fmt.Errorf("GetSystemWebhooks: %w", err)
+	}
+
+	if len(ws) == 0 {
+		return nil
+	}
+
+	for _, w := range ws {
+		if err := PrepareWebhook(ctx, w, event, p); err != nil {
+			return err
+		}
+	}
+	return nil
+}

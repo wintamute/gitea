@@ -410,3 +410,31 @@ func WorkflowJobStatusUpdate(ctx context.Context, repo *repo_model.Repository, s
 		notifier.WorkflowJobStatusUpdate(ctx, repo, sender, job, task)
 	}
 }
+
+// CreateUser notifies user creation to notifiers
+func CreateUser(ctx context.Context, doer, newUser *user_model.User) {
+	for _, notifier := range notifiers {
+		notifier.CreateUser(ctx, doer, newUser)
+	}
+}
+
+// DeleteUser notifies user deletion to notifiers
+func DeleteUser(ctx context.Context, doer, deletedUser *user_model.User) {
+	for _, notifier := range notifiers {
+		notifier.DeleteUser(ctx, doer, deletedUser)
+	}
+}
+
+// UpdateUser notifies user update to notifiers
+func UpdateUser(ctx context.Context, doer, user *user_model.User) {
+	for _, notifier := range notifiers {
+		notifier.UpdateUser(ctx, doer, user)
+	}
+}
+
+// ProhibitLoginUser notifies user prohibit login change to notifiers
+func ProhibitLoginUser(ctx context.Context, doer, user *user_model.User, prohibited bool) {
+	for _, notifier := range notifiers {
+		notifier.ProhibitLoginUser(ctx, doer, user, prohibited)
+	}
+}

@@ -187,6 +187,10 @@ func ParseHookEvent(form forms.WebhookForm) *webhook_module.HookEvent {
 			webhook_module.HookEventStatus:                   form.Status,
 			webhook_module.HookEventWorkflowRun:              form.WorkflowRun,
 			webhook_module.HookEventWorkflowJob:              form.WorkflowJob,
+			webhook_module.HookEventUserCreate:               form.UserCreate,
+			webhook_module.HookEventUserDelete:               form.UserDelete,
+			webhook_module.HookEventUserUpdate:               form.UserUpdate,
+			webhook_module.HookEventUserProhibitLogin:        form.UserProhibitLogin,
 		},
 		BranchFilter: form.BranchFilter,
 	}
