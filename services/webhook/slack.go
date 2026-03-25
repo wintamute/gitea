@@ -191,6 +191,12 @@ func (s slackConvertor) User(p *api.UserPayload) (SlackPayload, error) {
 	return s.createPayload(text, nil), nil
 }
 
+func (s slackConvertor) Organization(p *api.OrganizationPayload) (SlackPayload, error) {
+	text, _ := getOrganizationPayloadInfo(p, SlackLinkFormatter, true)
+
+	return s.createPayload(text, nil), nil
+}
+
 // Push implements payloadConvertor Push method
 func (s slackConvertor) Push(p *api.PushPayload) (SlackPayload, error) {
 	// n new commits

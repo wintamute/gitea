@@ -22,6 +22,7 @@ import (
 	"code.gitea.io/gitea/services/context"
 	"code.gitea.io/gitea/services/convert"
 	feed_service "code.gitea.io/gitea/services/feed"
+	notify_service "code.gitea.io/gitea/services/notify"
 	"code.gitea.io/gitea/services/org"
 	user_service "code.gitea.io/gitea/services/user"
 )
@@ -278,6 +279,8 @@ func Create(ctx *context.APIContext) {
 		return
 	}
 
+	notify_service.CreateOrganization(ctx, ctx.Doer, org)
+
 	ctx.JSON(http.StatusCreated, convert.ToOrganization(ctx, org))
 }
 
@@ -424,6 +427,8 @@ func Delete(ctx *context.APIContext) {
 	//     "$ref": "#/responses/empty"
 	//   "404":
 	//     "$ref": "#/responses/notFound"
+
+	notify_service.DeleteOrganization(ctx, ctx.Doer, ctx.Org.Organization)
 
 	if err := org.DeleteOrganization(ctx, ctx.Org.Organization, false); err != nil {
 		ctx.APIErrorInternal(err)

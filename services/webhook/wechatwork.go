@@ -199,6 +199,12 @@ func (wc wechatworkConvertor) User(p *api.UserPayload) (WechatworkPayload, error
 	return newWechatworkMarkdownPayload(text), nil
 }
 
+func (wc wechatworkConvertor) Organization(p *api.OrganizationPayload) (WechatworkPayload, error) {
+	text, _ := getOrganizationPayloadInfo(p, noneLinkFormatter, true)
+
+	return newWechatworkMarkdownPayload(text), nil
+}
+
 func newWechatworkRequest(_ context.Context, w *webhook_model.Webhook, t *webhook_model.HookTask) (*http.Request, []byte, error) {
 	var pc payloadConvertor[WechatworkPayload] = wechatworkConvertor{}
 	return newJSONRequest(pc, w, t, true)

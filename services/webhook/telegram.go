@@ -198,6 +198,12 @@ func (telegramConvertor) User(p *api.UserPayload) (TelegramPayload, error) {
 	return createTelegramPayloadHTML(text), nil
 }
 
+func (telegramConvertor) Organization(p *api.OrganizationPayload) (TelegramPayload, error) {
+	text, _ := getOrganizationPayloadInfo(p, htmlLinkFormatter, true)
+
+	return createTelegramPayloadHTML(text), nil
+}
+
 func createTelegramPayloadHTML(msgHTML string) TelegramPayload {
 	// https://core.telegram.org/bots/api#formatting-options
 	return TelegramPayload{
