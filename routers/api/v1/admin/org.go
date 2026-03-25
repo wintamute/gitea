@@ -15,6 +15,7 @@ import (
 	"gitea.dev/routers/api/v1/utils"
 	"gitea.dev/services/context"
 	"gitea.dev/services/convert"
+	notify_service "gitea.dev/services/notify"
 )
 
 // CreateOrg api for create organization
@@ -73,6 +74,8 @@ func CreateOrg(ctx *context.APIContext) {
 		}
 		return
 	}
+
+	notify_service.CreateOrganization(ctx, ctx.Doer, org)
 
 	ctx.JSON(http.StatusCreated, convert.ToOrganization(ctx, org))
 }

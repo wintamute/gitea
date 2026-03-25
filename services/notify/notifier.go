@@ -9,6 +9,7 @@ import (
 	actions_model "gitea.dev/models/actions"
 	git_model "gitea.dev/models/git"
 	issues_model "gitea.dev/models/issues"
+	org_model "gitea.dev/models/organization"
 	packages_model "gitea.dev/models/packages"
 	repo_model "gitea.dev/models/repo"
 	user_model "gitea.dev/models/user"
@@ -88,4 +89,7 @@ type Notifier interface {
 	DeleteUser(ctx context.Context, doer, deletedUser *user_model.User)
 	UpdateUser(ctx context.Context, doer, user *user_model.User)
 	ProhibitLoginUser(ctx context.Context, doer, user *user_model.User, prohibited bool)
+
+	CreateOrganization(ctx context.Context, doer *user_model.User, org *org_model.Organization)
+	DeleteOrganization(ctx context.Context, doer *user_model.User, org *org_model.Organization)
 }

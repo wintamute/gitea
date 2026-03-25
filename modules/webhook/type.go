@@ -38,6 +38,10 @@ const (
 	HookEventUserDelete        HookEventType = "user_delete"
 	HookEventUserUpdate        HookEventType = "user_update"
 	HookEventUserProhibitLogin HookEventType = "user_prohibit_login"
+
+	// System events (organization management)
+	HookEventOrgCreate HookEventType = "org_create"
+	HookEventOrgDelete HookEventType = "org_delete"
 	// once a new event added here, please also added to AllEvents() function
 
 	// FIXME: This event should be a group of pull_request_review_xxx events
@@ -80,6 +84,8 @@ func AllEvents() []HookEventType {
 		HookEventUserDelete,
 		HookEventUserUpdate,
 		HookEventUserProhibitLogin,
+		HookEventOrgCreate,
+		HookEventOrgDelete,
 	}
 }
 

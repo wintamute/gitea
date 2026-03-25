@@ -17,6 +17,7 @@ import (
 	"gitea.dev/modules/web"
 	"gitea.dev/services/context"
 	"gitea.dev/services/forms"
+	notify_service "gitea.dev/services/notify"
 )
 
 const (
@@ -78,6 +79,8 @@ func CreatePost(ctx *context.Context) {
 		return
 	}
 	log.Trace("Organization created: %s", org.Name)
+
+	notify_service.CreateOrganization(ctx, ctx.Doer, org)
 
 	ctx.Redirect(org.AsUser().DashboardLink())
 }

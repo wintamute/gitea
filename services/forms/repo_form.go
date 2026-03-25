@@ -239,6 +239,8 @@ type WebhookForm struct {
 	UserDelete               bool
 	UserUpdate               bool
 	UserProhibitLogin        bool
+	OrgCreate                bool
+	OrgDelete                bool
 	Active                   bool
 	BranchFilter             string `binding:"GlobPattern"`
 	AuthorizationHeader      string

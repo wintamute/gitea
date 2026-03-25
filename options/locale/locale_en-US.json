@@ -3933,5 +3933,9 @@
   "systemwebhook.settings.event_user_update": "User Updated",
   "systemwebhook.settings.event_user_update_desc": "A user account profile is updated.",
   "systemwebhook.settings.event_user_prohibit_login": "User Login Prohibited",
-  "systemwebhook.settings.event_user_prohibit_login_desc": "A user login is prohibited or allowed."
+  "systemwebhook.settings.event_user_prohibit_login_desc": "A user login is prohibited or allowed.",
+  "systemwebhook.settings.event_org_create": "Organization Created",
+  "systemwebhook.settings.event_org_create_desc": "A new organization is created.",
+  "systemwebhook.settings.event_org_delete": "Organization Deleted",
+  "systemwebhook.settings.event_org_delete_desc": "An organization is deleted."
 }

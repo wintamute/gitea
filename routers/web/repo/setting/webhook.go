@@ -191,6 +191,8 @@ func ParseHookEvent(form forms.WebhookForm) *webhook_module.HookEvent {
 			webhook_module.HookEventUserDelete:               form.UserDelete,
 			webhook_module.HookEventUserUpdate:               form.UserUpdate,
 			webhook_module.HookEventUserProhibitLogin:        form.UserProhibitLogin,
+			webhook_module.HookEventOrgCreate:                form.OrgCreate,
+			webhook_module.HookEventOrgDelete:                form.OrgDelete,
 		},
 		BranchFilter: form.BranchFilter,
 	}

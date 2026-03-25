@@ -1110,3 +1110,23 @@ func (m *webhookNotifier) ProhibitLoginUser(ctx context.Context, doer, user *use
 		log.Error("PrepareSystemWebhooks [user_id: %d]: %v", user.ID, err)
 	}
 }
+
+func (m *webhookNotifier) CreateOrganization(ctx context.Context, doer *user_model.User, org *organization.Organization) {
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventOrgCreate, &api.OrganizationPayload{
+		Action:       api.HookOrgCreated,
+		Organization: convert.ToOrganization(ctx, org),
+		Sender:       convert.ToUser(ctx, doer, nil),
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [org_id: %d]: %v", org.ID, err)
+	}
+}
+
+func (m *webhookNotifier) DeleteOrganization(ctx context.Context, doer *user_model.User, org *organization.Organization) {
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventOrgDelete, &api.OrganizationPayload{
+		Action:       api.HookOrgDeleted,
+		Organization: convert.ToOrganization(ctx, org),
+		Sender:       convert.ToUser(ctx, doer, nil),
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [org_id: %d]: %v", org.ID, err)
+	}
+}

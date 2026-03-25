@@ -206,6 +206,8 @@ func updateHookEvents(events []string) webhook_module.HookEvents {
 	hookEvents[webhook_module.HookEventUserDelete] = util.SliceContainsString(events, string(webhook_module.HookEventUserDelete), true)
 	hookEvents[webhook_module.HookEventUserUpdate] = util.SliceContainsString(events, string(webhook_module.HookEventUserUpdate), true)
 	hookEvents[webhook_module.HookEventUserProhibitLogin] = util.SliceContainsString(events, string(webhook_module.HookEventUserProhibitLogin), true)
+	hookEvents[webhook_module.HookEventOrgCreate] = util.SliceContainsString(events, string(webhook_module.HookEventOrgCreate), true)
+	hookEvents[webhook_module.HookEventOrgDelete] = util.SliceContainsString(events, string(webhook_module.HookEventOrgDelete), true)
 	return hookEvents
 }
 

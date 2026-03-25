@@ -9,6 +9,7 @@ import (
 	actions_model "gitea.dev/models/actions"
 	git_model "gitea.dev/models/git"
 	issues_model "gitea.dev/models/issues"
+	org_model "gitea.dev/models/organization"
 	packages_model "gitea.dev/models/packages"
 	repo_model "gitea.dev/models/repo"
 	user_model "gitea.dev/models/user"
@@ -442,5 +443,19 @@ func UpdateUser(ctx context.Context, doer, user *user_model.User) {
 func ProhibitLoginUser(ctx context.Context, doer, user *user_model.User, prohibited bool) {
 	for _, notifier := range notifiers {
 		notifier.ProhibitLoginUser(ctx, doer, user, prohibited)
+	}
+}
+
+// CreateOrganization notifies organization creation to notifiers
+func CreateOrganization(ctx context.Context, doer *user_model.User, org *org_model.Organization) {
+	for _, notifier := range notifiers {
+		notifier.CreateOrganization(ctx, doer, org)
+	}
+}
+
+// DeleteOrganization notifies organization deletion to notifiers
+func DeleteOrganization(ctx context.Context, doer *user_model.User, org *org_model.Organization) {
+	for _, notifier := range notifiers {
+		notifier.DeleteOrganization(ctx, doer, org)
 	}
 }

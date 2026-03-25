@@ -695,3 +695,28 @@ type UserPayload struct {
 func (p *UserPayload) JSONPayload() ([]byte, error) {
 	return json.MarshalIndent(p, "", "  ")
 }
+
+// HookOrgAction defines hook organization action type
+type HookOrgAction string
+
+// all organization actions
+const (
+	HookOrgCreated HookOrgAction = "created"
+	HookOrgDeleted HookOrgAction = "deleted"
+)
+
+// OrganizationPayload represents a payload information of organization event.
+// This event is triggered when an organization is created or deleted on the system level.
+type OrganizationPayload struct {
+	// The action performed on the organization (created, deleted)
+	Action HookOrgAction `json:"action"`
+	// The organization that was acted upon
+	Organization *Organization `json:"organization"`
+	// The user who performed the action
+	Sender *User `json:"sender"`
+}
+
+// JSONPayload implements Payload
+func (p *OrganizationPayload) JSONPayload() ([]byte, error) {
+	return json.MarshalIndent(p, "", "  ")
+}

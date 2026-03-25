@@ -361,6 +361,20 @@ func (msteamsConvertor) User(p *api.UserPayload) (MSTeamsPayload, error) {
 	), nil
 }
 
+func (msteamsConvertor) Organization(p *api.OrganizationPayload) (MSTeamsPayload, error) {
+	title, color := getOrganizationPayloadInfo(p, noneLinkFormatter, false)
+
+	return createMSTeamsPayload(
+		nil,
+		p.Sender,
+		title,
+		"",
+		setting.AppURL+p.Organization.Name,
+		color,
+		&MSTeamsFact{"Organization:", p.Organization.Name},
+	), nil
+}
+
 func createMSTeamsPayload(r *api.Repository, s *api.User, title, text, actionTarget string, color int, fact *MSTeamsFact) MSTeamsPayload {
 	facts := make([]MSTeamsFact, 0, 2)
 	if r != nil {

@@ -9,6 +9,7 @@ import (
 	actions_model "gitea.dev/models/actions"
 	git_model "gitea.dev/models/git"
 	issues_model "gitea.dev/models/issues"
+	org_model "gitea.dev/models/organization"
 	packages_model "gitea.dev/models/packages"
 	repo_model "gitea.dev/models/repo"
 	user_model "gitea.dev/models/user"
@@ -234,4 +235,12 @@ func (*NullNotifier) UpdateUser(ctx context.Context, doer, user *user_model.User
 
 // ProhibitLoginUser places a place holder function
 func (*NullNotifier) ProhibitLoginUser(ctx context.Context, doer, user *user_model.User, prohibited bool) {
+}
+
+// CreateOrganization places a place holder function
+func (*NullNotifier) CreateOrganization(ctx context.Context, doer *user_model.User, org *org_model.Organization) {
+}
+
+// DeleteOrganization places a place holder function
+func (*NullNotifier) DeleteOrganization(ctx context.Context, doer *user_model.User, org *org_model.Organization) {
 }
