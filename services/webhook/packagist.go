@@ -130,6 +130,10 @@ func (pc packagistConvertor) Organization(_ *api.OrganizationPayload) (Packagist
 	return PackagistPayload{}, nil
 }
 
+func (pc packagistConvertor) Team(_ *api.TeamPayload) (PackagistPayload, error) {
+	return PackagistPayload{}, nil
+}
+
 func newPackagistRequest(_ context.Context, w *webhook_model.Webhook, t *webhook_model.HookTask) (*http.Request, []byte, error) {
 	meta := &PackagistMeta{}
 	if err := json.Unmarshal([]byte(w.Meta), meta); err != nil {

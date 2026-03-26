@@ -201,6 +201,12 @@ func (dingtalkConvertor) Organization(p *api.OrganizationPayload) (DingtalkPaylo
 	return createDingtalkPayload(text, text, "view organization", setting.AppURL+p.Organization.Name), nil
 }
 
+func (dingtalkConvertor) Team(p *api.TeamPayload) (DingtalkPayload, error) {
+	text, _ := getTeamPayloadInfo(p, noneLinkFormatter, true)
+
+	return createDingtalkPayload(text, text, "view team", setting.AppURL+p.Organization.Name+"/teams"), nil
+}
+
 func createDingtalkPayload(title, text, singleTitle, singleURL string) DingtalkPayload {
 	return DingtalkPayload{
 		MsgType: "actionCard",

@@ -92,4 +92,7 @@ type Notifier interface {
 
 	CreateOrganization(ctx context.Context, doer *user_model.User, org *org_model.Organization)
 	DeleteOrganization(ctx context.Context, doer *user_model.User, org *org_model.Organization)
+
+	CreateTeam(ctx context.Context, doer *user_model.User, team *org_model.Team)
+	DeleteTeam(ctx context.Context, doer *user_model.User, team *org_model.Team)
 }

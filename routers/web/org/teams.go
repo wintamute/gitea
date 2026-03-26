@@ -29,6 +29,7 @@ import (
 	"gitea.dev/services/context"
 	"gitea.dev/services/convert"
 	"gitea.dev/services/forms"
+	notify_service "gitea.dev/services/notify"
 	org_service "gitea.dev/services/org"
 	repo_service "gitea.dev/services/repository"
 )
@@ -420,6 +421,9 @@ func NewTeamPost(ctx *context.Context) {
 		return
 	}
 	log.Trace("Team created: %s/%s", ctx.Org.Organization.Name, t.Name)
+
+	notify_service.CreateTeam(ctx, ctx.Doer, t)
+
 	ctx.Redirect(ctx.Org.OrgLink + "/teams/" + url.PathEscape(t.LowerName))
 }
 
@@ -613,11 +617,14 @@ func EditTeamPost(ctx *context.Context) {
 
 // DeleteTeam response for the delete team request
 func DeleteTeam(ctx *context.Context) {
+
 	if err := org_service.DeleteTeam(ctx, ctx.Org.Team); err != nil {
 		ctx.Flash.Error("DeleteTeam: " + err.Error())
 	} else {
 		ctx.Flash.Success(ctx.Tr("org.teams.delete_team_success"))
 	}
+
+	notify_service.DeleteTeam(ctx, ctx.Doer, ctx.Org.Team)
 
 	ctx.JSONRedirect(ctx.Org.OrgLink + "/teams")
 }

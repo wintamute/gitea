@@ -720,3 +720,30 @@ type OrganizationPayload struct {
 func (p *OrganizationPayload) JSONPayload() ([]byte, error) {
 	return json.MarshalIndent(p, "", "  ")
 }
+
+// HookTeamAction defines hook team action type
+type HookTeamAction string
+
+// all team actions
+const (
+	HookTeamCreated HookTeamAction = "created"
+	HookTeamDeleted HookTeamAction = "deleted"
+)
+
+// TeamPayload represents a payload information of team event.
+// This event is triggered when a team is created or deleted on the system level.
+type TeamPayload struct {
+	// The action performed on the team (created, deleted)
+	Action HookTeamAction `json:"action"`
+	// The team that was acted upon
+	Team *Team `json:"team"`
+	// The organization the team belongs to
+	Organization *Organization `json:"organization"`
+	// The user who performed the action
+	Sender *User `json:"sender"`
+}
+
+// JSONPayload implements Payload
+func (p *TeamPayload) JSONPayload() ([]byte, error) {
+	return json.MarshalIndent(p, "", "  ")
+}

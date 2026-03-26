@@ -434,6 +434,28 @@ func getOrganizationPayloadInfo(p *api.OrganizationPayload, linkFormatter linkFo
 	return text, color
 }
 
+func getTeamPayloadInfo(p *api.TeamPayload, linkFormatter linkFormatter, withSender bool) (text string, color int) {
+	orgName := ""
+	if p.Organization != nil {
+		orgName = p.Organization.Name + "/"
+	}
+	teamName := orgName + p.Team.Name
+
+	switch p.Action {
+	case api.HookTeamCreated:
+		text = "Team created: " + linkFormatter(setting.AppURL+url.PathEscape(teamName), teamName)
+		color = greenColor
+	case api.HookTeamDeleted:
+		text = "Team deleted: " + teamName
+		color = redColor
+	}
+	if withSender && p.Sender != nil {
+		text += " by " + linkFormatter(setting.AppURL+url.PathEscape(p.Sender.UserName), p.Sender.UserName)
+	}
+
+	return text, color
+}
+
 // ToHook convert models.Webhook to api.Hook
 // This function is not part of the convert package to prevent an import cycle
 func ToHook(repoLink string, w *webhook_model.Webhook) (*api.Hook, error) {

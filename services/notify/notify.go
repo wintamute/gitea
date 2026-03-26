@@ -459,3 +459,17 @@ func DeleteOrganization(ctx context.Context, doer *user_model.User, org *org_mod
 		notifier.DeleteOrganization(ctx, doer, org)
 	}
 }
+
+// CreateTeam notifies team creation to notifiers
+func CreateTeam(ctx context.Context, doer *user_model.User, team *org_model.Team) {
+	for _, notifier := range notifiers {
+		notifier.CreateTeam(ctx, doer, team)
+	}
+}
+
+// DeleteTeam notifies team deletion to notifiers
+func DeleteTeam(ctx context.Context, doer *user_model.User, team *org_model.Team) {
+	for _, notifier := range notifiers {
+		notifier.DeleteTeam(ctx, doer, team)
+	}
+}

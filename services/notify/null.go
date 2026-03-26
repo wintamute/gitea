@@ -244,3 +244,11 @@ func (*NullNotifier) CreateOrganization(ctx context.Context, doer *user_model.Us
 // DeleteOrganization places a place holder function
 func (*NullNotifier) DeleteOrganization(ctx context.Context, doer *user_model.User, org *org_model.Organization) {
 }
+
+// CreateTeam places a place holder function
+func (*NullNotifier) CreateTeam(ctx context.Context, doer *user_model.User, team *org_model.Team) {
+}
+
+// DeleteTeam places a place holder function
+func (*NullNotifier) DeleteTeam(ctx context.Context, doer *user_model.User, team *org_model.Team) {
+}

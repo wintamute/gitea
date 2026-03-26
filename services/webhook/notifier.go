@@ -1130,3 +1130,37 @@ func (m *webhookNotifier) DeleteOrganization(ctx context.Context, doer *user_mod
 		log.Error("PrepareSystemWebhooks [org_id: %d]: %v", org.ID, err)
 	}
 }
+
+func (m *webhookNotifier) CreateTeam(ctx context.Context, doer *user_model.User, team *organization.Team) {
+	apiTeam, err := convert.ToTeam(ctx, team, true)
+	if err != nil {
+		log.Error("convert.ToTeam [team_id: %d]: %v", team.ID, err)
+		return
+	}
+
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventTeamCreate, &api.TeamPayload{
+		Action:       api.HookTeamCreated,
+		Team:         apiTeam,
+		Organization: apiTeam.Organization,
+		Sender:       convert.ToUser(ctx, doer, nil),
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [team_id: %d]: %v", team.ID, err)
+	}
+}
+
+func (m *webhookNotifier) DeleteTeam(ctx context.Context, doer *user_model.User, team *organization.Team) {
+	apiTeam, err := convert.ToTeam(ctx, team, true)
+	if err != nil {
+		log.Error("convert.ToTeam [team_id: %d]: %v", team.ID, err)
+		return
+	}
+
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventTeamDelete, &api.TeamPayload{
+		Action:       api.HookTeamDeleted,
+		Team:         apiTeam,
+		Organization: apiTeam.Organization,
+		Sender:       convert.ToUser(ctx, doer, nil),
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [team_id: %d]: %v", team.ID, err)
+	}
+}
