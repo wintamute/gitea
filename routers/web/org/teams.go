@@ -77,6 +77,9 @@ func TeamsAction(ctx *context.Context) {
 			return
 		}
 		err = org_service.AddTeamMember(ctx, ctx.Org.Team, ctx.Doer)
+		if err == nil {
+			notify_service.AddTeamMember(ctx, ctx.Doer, ctx.Org.Team, ctx.Doer)
+		}
 	case "leave":
 		err = org_service.RemoveTeamMember(ctx, ctx.Org.Team, ctx.Doer)
 		if err != nil {
@@ -90,6 +93,8 @@ func TeamsAction(ctx *context.Context) {
 				})
 				return
 			}
+		} else {
+			notify_service.RemoveTeamMember(ctx, ctx.Doer, ctx.Org.Team, ctx.Doer)
 		}
 		checkIsOrgMemberAndRedirect(ctx, ctx.Org.OrgLink+"/teams/")
 		return
@@ -117,6 +122,8 @@ func TeamsAction(ctx *context.Context) {
 				})
 				return
 			}
+		} else {
+			notify_service.RemoveTeamMember(ctx, ctx.Doer, ctx.Org.Team, user)
 		}
 		checkIsOrgMemberAndRedirect(ctx, ctx.Org.OrgLink+"/teams/"+url.PathEscape(ctx.Org.Team.LowerName))
 		return
@@ -161,6 +168,9 @@ func TeamsAction(ctx *context.Context) {
 			ctx.Flash.Error(ctx.Tr("org.teams.add_duplicate_users"))
 		} else {
 			err = org_service.AddTeamMember(ctx, ctx.Org.Team, u)
+			if err == nil {
+				notify_service.AddTeamMember(ctx, ctx.Doer, ctx.Org.Team, u)
+			}
 		}
 
 		page = "team"
@@ -559,7 +569,6 @@ func EditTeamPost(ctx *context.Context) {
 
 // DeleteTeam response for the delete team request
 func DeleteTeam(ctx *context.Context) {
-
 	if err := org_service.DeleteTeam(ctx, ctx.Org.Team); err != nil {
 		ctx.Flash.Error("DeleteTeam: " + err.Error())
 	} else {
@@ -608,6 +617,7 @@ func TeamInvitePost(ctx *context.Context) {
 		ctx.ServerError("AddTeamMember", err)
 		return
 	}
+	notify_service.AddTeamMember(ctx, ctx.Doer, team, ctx.Doer)
 
 	if err := org_model.RemoveInviteByID(ctx, invite.ID, team.ID); err != nil {
 		log.Error("RemoveInviteByID: %v", err)

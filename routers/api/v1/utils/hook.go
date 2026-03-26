@@ -210,6 +210,8 @@ func updateHookEvents(events []string) webhook_module.HookEvents {
 	hookEvents[webhook_module.HookEventOrgDelete] = util.SliceContainsString(events, string(webhook_module.HookEventOrgDelete), true)
 	hookEvents[webhook_module.HookEventTeamCreate] = util.SliceContainsString(events, string(webhook_module.HookEventTeamCreate), true)
 	hookEvents[webhook_module.HookEventTeamDelete] = util.SliceContainsString(events, string(webhook_module.HookEventTeamDelete), true)
+	hookEvents[webhook_module.HookEventTeamAddMember] = util.SliceContainsString(events, string(webhook_module.HookEventTeamAddMember), true)
+	hookEvents[webhook_module.HookEventTeamRemoveMember] = util.SliceContainsString(events, string(webhook_module.HookEventTeamRemoveMember), true)
 	return hookEvents
 }
 

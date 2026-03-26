@@ -44,8 +44,10 @@ const (
 	HookEventOrgDelete HookEventType = "org_delete"
 
 	// System events (team management)
-	HookEventTeamCreate HookEventType = "team_create"
-	HookEventTeamDelete HookEventType = "team_delete"
+	HookEventTeamCreate       HookEventType = "team_create"
+	HookEventTeamDelete       HookEventType = "team_delete"
+	HookEventTeamAddMember    HookEventType = "team_add_member"
+	HookEventTeamRemoveMember HookEventType = "team_remove_member"
 	// once a new event added here, please also added to AllEvents() function
 
 	// FIXME: This event should be a group of pull_request_review_xxx events
@@ -92,6 +94,8 @@ func AllEvents() []HookEventType {
 		HookEventOrgDelete,
 		HookEventTeamCreate,
 		HookEventTeamDelete,
+		HookEventTeamAddMember,
+		HookEventTeamRemoveMember,
 	}
 }
 

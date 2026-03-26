@@ -431,6 +431,26 @@
 				</div>
 			</div>
 		</div>
+		<!-- Team Add Member -->
+		<div class="seven wide column">
+			<div class="field">
+				<div class="ui checkbox">
+					<input name="team_add_member" type="checkbox" {{if .Webhook.HookEvents.Get "team_add_member"}}checked{{end}}>
+					<label>{{ctx.Locale.Tr "systemwebhook.settings.event_team_add_member"}}</label>
+					<span class="help">{{ctx.Locale.Tr "systemwebhook.settings.event_team_add_member_desc"}}</span>
+				</div>
+			</div>
+		</div>
+		<!-- Team Remove Member -->
+		<div class="seven wide column">
+			<div class="field">
+				<div class="ui checkbox">
+					<input name="team_remove_member" type="checkbox" {{if .Webhook.HookEvents.Get "team_remove_member"}}checked{{end}}>
+					<label>{{ctx.Locale.Tr "systemwebhook.settings.event_team_remove_member"}}</label>
+					<span class="help">{{ctx.Locale.Tr "systemwebhook.settings.event_team_remove_member_desc"}}</span>
+				</div>
+			</div>
+		</div>
 		{{end}}
 	</div>
 </div>

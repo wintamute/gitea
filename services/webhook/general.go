@@ -448,6 +448,20 @@ func getTeamPayloadInfo(p *api.TeamPayload, linkFormatter linkFormatter, withSen
 	case api.HookTeamDeleted:
 		text = "Team deleted: " + teamName
 		color = redColor
+	case api.HookTeamMemberAdded:
+		memberName := ""
+		if p.Member != nil {
+			memberName = p.Member.UserName
+		}
+		text = "Member added to team " + linkFormatter(setting.AppURL+url.PathEscape(teamName), teamName) + ": " + linkFormatter(setting.AppURL+url.PathEscape(memberName), memberName)
+		color = greenColor
+	case api.HookTeamMemberRemoved:
+		memberName := ""
+		if p.Member != nil {
+			memberName = p.Member.UserName
+		}
+		text = "Member removed from team " + teamName + ": " + memberName
+		color = redColor
 	}
 	if withSender && p.Sender != nil {
 		text += " by " + linkFormatter(setting.AppURL+url.PathEscape(p.Sender.UserName), p.Sender.UserName)

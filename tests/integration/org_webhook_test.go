@@ -4,7 +4,6 @@
 package integration
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -35,7 +34,7 @@ func testAPICreateOrg(t *testing.T, session *TestSession, orgName string) *api.O
 
 func testAPIDeleteOrg(t *testing.T, session *TestSession, orgName string) {
 	token := getTokenForLoggedInUser(t, session, auth_model.AccessTokenScopeAll)
-	req := NewRequest(t, "DELETE", fmt.Sprintf("/api/v1/orgs/%s", url.PathEscape(orgName))).AddTokenAuth(token)
+	req := NewRequest(t, "DELETE", "/api/v1/orgs/"+url.PathEscape(orgName)).AddTokenAuth(token)
 	MakeRequest(t, req, http.StatusNoContent)
 }
 
