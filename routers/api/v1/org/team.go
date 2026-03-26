@@ -503,6 +503,7 @@ func AddTeamMember(ctx *context.APIContext) {
 		}
 		return
 	}
+	notify_service.AddTeamMember(ctx, ctx.Doer, ctx.Org.Team, u)
 	ctx.Status(http.StatusNoContent)
 }
 
@@ -540,6 +541,7 @@ func RemoveTeamMember(ctx *context.APIContext) {
 		ctx.APIErrorInternal(err)
 		return
 	}
+	notify_service.RemoveTeamMember(ctx, ctx.Doer, ctx.Org.Team, u)
 	ctx.Status(http.StatusNoContent)
 }
 

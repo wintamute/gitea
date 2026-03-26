@@ -726,19 +726,23 @@ type HookTeamAction string
 
 // all team actions
 const (
-	HookTeamCreated HookTeamAction = "created"
-	HookTeamDeleted HookTeamAction = "deleted"
+	HookTeamCreated       HookTeamAction = "created"
+	HookTeamDeleted       HookTeamAction = "deleted"
+	HookTeamMemberAdded   HookTeamAction = "member_added"
+	HookTeamMemberRemoved HookTeamAction = "member_removed"
 )
 
 // TeamPayload represents a payload information of team event.
-// This event is triggered when a team is created or deleted on the system level.
+// This event is triggered when a team is created, deleted, or has members added/removed on the system level.
 type TeamPayload struct {
-	// The action performed on the team (created, deleted)
+	// The action performed on the team (created, deleted, member_added, member_removed)
 	Action HookTeamAction `json:"action"`
 	// The team that was acted upon
 	Team *Team `json:"team"`
 	// The organization the team belongs to
 	Organization *Organization `json:"organization"`
+	// The team member affected (for member_added/member_removed actions)
+	Member *User `json:"member,omitempty"`
 	// The user who performed the action
 	Sender *User `json:"sender"`
 }

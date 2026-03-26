@@ -3941,5 +3941,9 @@
   "systemwebhook.settings.event_team_create": "Team Created",
   "systemwebhook.settings.event_team_create_desc": "A new team is created in an organization.",
   "systemwebhook.settings.event_team_delete": "Team Deleted",
-  "systemwebhook.settings.event_team_delete_desc": "A team is deleted from an organization."
+  "systemwebhook.settings.event_team_delete_desc": "A team is deleted from an organization.",
+  "systemwebhook.settings.event_team_add_member": "Team Member Added",
+  "systemwebhook.settings.event_team_add_member_desc": "A user is added to a team.",
+  "systemwebhook.settings.event_team_remove_member": "Team Member Removed",
+  "systemwebhook.settings.event_team_remove_member_desc": "A user is removed from a team."
 }

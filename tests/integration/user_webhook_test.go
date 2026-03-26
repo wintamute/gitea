@@ -19,10 +19,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Pointer[T any](d T) *T {
-	return &d
-}
-
 func testAPICreateSystemWebhook(t *testing.T, session *TestSession, url, event string) int64 {
 	token := getTokenForLoggedInUser(t, session, auth_model.AccessTokenScopeAll)
 	req := NewRequestWithJSON(t, "POST", "/api/v1/admin/hooks", api.CreateHookOption{
@@ -54,7 +50,7 @@ func testAPICreateUser(t *testing.T, session *TestSession, username, email, pass
 		Username:           username,
 		Email:              email,
 		Password:           password,
-		MustChangePassword: Pointer(false),
+		MustChangePassword: new(false),
 	}).AddTokenAuth(token)
 	resp := MakeRequest(t, req, http.StatusCreated)
 
@@ -221,7 +217,7 @@ func Test_WebhookUserUpdate(t *testing.T) {
 
 		// 3. Trigger the webhook by updating the user
 		testAPIEditUser(t, session, "webhookupdateuser", api.EditUserOption{
-			FullName:  Pointer("Updated Full Name"),
+			FullName:  new("Updated Full Name"),
 			LoginName: "webhookupdateuser",
 		})
 
@@ -262,7 +258,7 @@ func Test_WebhookUserProhibitLogin(t *testing.T) {
 
 		// 3. Trigger the webhook by prohibiting login
 		testAPIEditUser(t, session, "webhookprohibituser", api.EditUserOption{
-			ProhibitLogin: Pointer(true),
+			ProhibitLogin: new(true),
 			LoginName:     "webhookprohibituser",
 		})
 
@@ -274,7 +270,7 @@ func Test_WebhookUserProhibitLogin(t *testing.T) {
 
 		// 5. Trigger the webhook by allowing login again
 		testAPIEditUser(t, session, "webhookprohibituser", api.EditUserOption{
-			ProhibitLogin: Pointer(false),
+			ProhibitLogin: new(false),
 			LoginName:     "webhookprohibituser",
 		})
 

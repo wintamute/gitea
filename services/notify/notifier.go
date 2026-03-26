@@ -95,4 +95,6 @@ type Notifier interface {
 
 	CreateTeam(ctx context.Context, doer *user_model.User, team *org_model.Team)
 	DeleteTeam(ctx context.Context, doer *user_model.User, team *org_model.Team)
+	AddTeamMember(ctx context.Context, doer *user_model.User, team *org_model.Team, member *user_model.User)
+	RemoveTeamMember(ctx context.Context, doer *user_model.User, team *org_model.Team, member *user_model.User)
 }

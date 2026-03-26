@@ -473,3 +473,17 @@ func DeleteTeam(ctx context.Context, doer *user_model.User, team *org_model.Team
 		notifier.DeleteTeam(ctx, doer, team)
 	}
 }
+
+// AddTeamMember notifies adding a member to a team to notifiers
+func AddTeamMember(ctx context.Context, doer *user_model.User, team *org_model.Team, member *user_model.User) {
+	for _, notifier := range notifiers {
+		notifier.AddTeamMember(ctx, doer, team, member)
+	}
+}
+
+// RemoveTeamMember notifies removing a member from a team to notifiers
+func RemoveTeamMember(ctx context.Context, doer *user_model.User, team *org_model.Team, member *user_model.User) {
+	for _, notifier := range notifiers {
+		notifier.RemoveTeamMember(ctx, doer, team, member)
+	}
+}

@@ -1164,3 +1164,39 @@ func (m *webhookNotifier) DeleteTeam(ctx context.Context, doer *user_model.User,
 		log.Error("PrepareSystemWebhooks [team_id: %d]: %v", team.ID, err)
 	}
 }
+
+func (m *webhookNotifier) AddTeamMember(ctx context.Context, doer *user_model.User, team *organization.Team, member *user_model.User) {
+	apiTeam, err := convert.ToTeam(ctx, team, true)
+	if err != nil {
+		log.Error("convert.ToTeam [team_id: %d]: %v", team.ID, err)
+		return
+	}
+
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventTeamAddMember, &api.TeamPayload{
+		Action:       api.HookTeamMemberAdded,
+		Team:         apiTeam,
+		Organization: apiTeam.Organization,
+		Member:       convert.ToUser(ctx, member, nil),
+		Sender:       convert.ToUser(ctx, doer, nil),
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [team_id: %d, member_id: %d]: %v", team.ID, member.ID, err)
+	}
+}
+
+func (m *webhookNotifier) RemoveTeamMember(ctx context.Context, doer *user_model.User, team *organization.Team, member *user_model.User) {
+	apiTeam, err := convert.ToTeam(ctx, team, true)
+	if err != nil {
+		log.Error("convert.ToTeam [team_id: %d]: %v", team.ID, err)
+		return
+	}
+
+	if err := PrepareSystemWebhooks(ctx, webhook_module.HookEventTeamRemoveMember, &api.TeamPayload{
+		Action:       api.HookTeamMemberRemoved,
+		Team:         apiTeam,
+		Organization: apiTeam.Organization,
+		Member:       convert.ToUser(ctx, member, nil),
+		Sender:       convert.ToUser(ctx, doer, nil),
+	}); err != nil {
+		log.Error("PrepareSystemWebhooks [team_id: %d, member_id: %d]: %v", team.ID, member.ID, err)
+	}
+}

@@ -243,6 +243,8 @@ type WebhookForm struct {
 	OrgDelete                bool
 	TeamCreate               bool
 	TeamDelete               bool
+	TeamAddMember            bool
+	TeamRemoveMember         bool
 	Active                   bool
 	BranchFilter             string `binding:"GlobPattern"`
 	AuthorizationHeader      string
