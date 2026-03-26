@@ -26,6 +26,7 @@ import (
 	user_setting "gitea.dev/routers/web/user/setting"
 	"gitea.dev/services/context"
 	"gitea.dev/services/forms"
+	notify_service "gitea.dev/services/notify"
 	org_service "gitea.dev/services/org"
 	user_service "gitea.dev/services/user"
 )
@@ -141,6 +142,8 @@ func SettingsDeleteOrgPost(ctx *context.Context) {
 		}
 		return
 	}
+
+	notify_service.DeleteOrganization(ctx, ctx.Doer, ctx.Org.Organization)
 
 	ctx.Flash.Success(ctx.Tr("org.settings.delete_successful", ctx.Org.Organization.Name))
 	ctx.JSONRedirect(setting.AppSubURL + "/")
