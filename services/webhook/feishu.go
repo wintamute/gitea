@@ -203,6 +203,12 @@ func (feishuConvertor) Organization(p *api.OrganizationPayload) (FeishuPayload, 
 	return newFeishuTextPayload(text), nil
 }
 
+func (feishuConvertor) Team(p *api.TeamPayload) (FeishuPayload, error) {
+	text, _ := getTeamPayloadInfo(p, noneLinkFormatter, true)
+
+	return newFeishuTextPayload(text), nil
+}
+
 // feishuGenSign generates a signature for Feishu webhook
 // https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot
 func feishuGenSign(secret string, timestamp int64) string {

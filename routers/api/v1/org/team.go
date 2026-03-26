@@ -23,6 +23,7 @@ import (
 	"code.gitea.io/gitea/services/context"
 	"code.gitea.io/gitea/services/convert"
 	feed_service "code.gitea.io/gitea/services/feed"
+	notify_service "code.gitea.io/gitea/services/notify"
 	org_service "code.gitea.io/gitea/services/org"
 	repo_service "code.gitea.io/gitea/services/repository"
 )
@@ -243,6 +244,8 @@ func CreateTeam(ctx *context.APIContext) {
 		return
 	}
 
+	notify_service.CreateTeam(ctx, ctx.Doer, team)
+
 	apiTeam, err := convert.ToTeam(ctx, team, true)
 	if err != nil {
 		ctx.APIErrorInternal(err)
@@ -356,6 +359,9 @@ func DeleteTeam(ctx *context.APIContext) {
 		ctx.APIErrorInternal(err)
 		return
 	}
+
+	notify_service.DeleteTeam(ctx, ctx.Doer, ctx.Org.Team)
+
 	ctx.Status(http.StatusNoContent)
 }
 

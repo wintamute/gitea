@@ -208,6 +208,8 @@ func updateHookEvents(events []string) webhook_module.HookEvents {
 	hookEvents[webhook_module.HookEventUserProhibitLogin] = util.SliceContainsString(events, string(webhook_module.HookEventUserProhibitLogin), true)
 	hookEvents[webhook_module.HookEventOrgCreate] = util.SliceContainsString(events, string(webhook_module.HookEventOrgCreate), true)
 	hookEvents[webhook_module.HookEventOrgDelete] = util.SliceContainsString(events, string(webhook_module.HookEventOrgDelete), true)
+	hookEvents[webhook_module.HookEventTeamCreate] = util.SliceContainsString(events, string(webhook_module.HookEventTeamCreate), true)
+	hookEvents[webhook_module.HookEventTeamDelete] = util.SliceContainsString(events, string(webhook_module.HookEventTeamDelete), true)
 	return hookEvents
 }
 

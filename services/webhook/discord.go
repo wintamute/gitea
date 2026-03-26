@@ -302,6 +302,12 @@ func (d discordConvertor) Organization(p *api.OrganizationPayload) (DiscordPaylo
 	return d.createPayload(p.Sender, text, "", setting.AppURL+p.Organization.Name, color), nil
 }
 
+func (d discordConvertor) Team(p *api.TeamPayload) (DiscordPayload, error) {
+	text, color := getTeamPayloadInfo(p, noneLinkFormatter, false)
+
+	return d.createPayload(p.Sender, text, "", setting.AppURL+p.Organization.Name+"/teams", color), nil
+}
+
 func newDiscordRequest(_ context.Context, w *webhook_model.Webhook, t *webhook_model.HookTask) (*http.Request, []byte, error) {
 	meta := &DiscordMeta{}
 	if err := json.Unmarshal([]byte(w.Meta), meta); err != nil {

@@ -197,6 +197,12 @@ func (s slackConvertor) Organization(p *api.OrganizationPayload) (SlackPayload, 
 	return s.createPayload(text, nil), nil
 }
 
+func (s slackConvertor) Team(p *api.TeamPayload) (SlackPayload, error) {
+	text, _ := getTeamPayloadInfo(p, SlackLinkFormatter, true)
+
+	return s.createPayload(text, nil), nil
+}
+
 // Push implements payloadConvertor Push method
 func (s slackConvertor) Push(p *api.PushPayload) (SlackPayload, error) {
 	// n new commits
