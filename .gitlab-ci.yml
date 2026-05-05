@@ -1,0 +1,52 @@
+variables:
+  DOCKER_DRIVER: overlay2
+  GITEA_VERSION: "$CI_COMMIT_REF_NAME"
+  HARBOR_REGISTRY: registry.dev.cssa.de
+  HARBOR_REGISTRY_IMAGE: "$HARBOR_REGISTRY/library/gitea"
+
+stages:
+  - build
+
+docker-build-main:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD" $HARBOR_REGISTRY
+  script:
+    - echo "building latest version based on master"
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build
+      --pull
+      -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME" .
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME $CI_REGISTRY_IMAGE:latest
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push "$CI_REGISTRY_IMAGE"
+    - docker tag $CI_REGISTRY_IMAGE:latest $HARBOR_REGISTRY_IMAGE:latest
+    - docker push $HARBOR_REGISTRY_IMAGE
+  rules:
+    - if: ($CI_COMMIT_BRANCH == "master")
+
+docker-build:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD" $HARBOR_REGISTRY
+  script:
+    - echo "building version" $CI_COMMIT_REF_NAME
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build
+      --pull
+      -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME"
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME $HARBOR_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $HARBOR_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  rules:
+    - if: $CI_COMMIT_TAG
