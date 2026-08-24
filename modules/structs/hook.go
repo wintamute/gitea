@@ -425,6 +425,8 @@ type ChangesPayload struct {
 	Body *ChangesFromPayload `json:"body,omitempty"`
 	// Changes made to the reference
 	Ref *ChangesFromPayload `json:"ref,omitempty"`
+	// Changes made to the repository name
+	Name *ChangesFromPayload `json:"name,omitempty"`
 	// Changes made to the labels added
 	AddedLabels []*Label `json:"added_labels"`
 	// Changes made to the labels removed
@@ -509,6 +511,8 @@ const (
 	HookRepoCreated HookRepoAction = "created"
 	// HookRepoDeleted deleted
 	HookRepoDeleted HookRepoAction = "deleted"
+	// HookRepoRenamed renamed
+	HookRepoRenamed HookRepoAction = "renamed"
 )
 
 // RepositoryPayload payload for repository webhooks
@@ -521,6 +525,8 @@ type RepositoryPayload struct {
 	Organization *User `json:"organization"`
 	// The user who performed the action
 	Sender *User `json:"sender"`
+	// Changes made to the repository
+	Changes *ChangesPayload `json:"changes,omitempty"`
 }
 
 // JSONPayload JSON representation of the payload
